@@ -124,4 +124,28 @@ body{
 .fb-wrapper {
   width: 300px;
   padding: 20px;
+  position: relative;
+}
+
+.fb-like {
+  margin-left: 50px;
+}
+
+.fan-page {
+  position: absolute;
+  top: 20px;
+  left: 0;
+  display: inline-block;
+  background: linear-gradient(#4C69BA, #3B55A0) repeat scroll 0% 0% transparent;
+  line-height: 20px;
+  height:20px;
+  font-size: 12px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-radius: 2px;
+}
+
+.fan-page > a {
+  color: white;
+  text-decoration: none;
 }
