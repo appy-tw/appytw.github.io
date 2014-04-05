@@ -109,7 +109,7 @@ body{
    {color: #fff;}
 }
 
-@media screen and (max-width: 320px) {
+@media screen and (max-width: 360px) {
   body {
     font-size: 30%;
   }
