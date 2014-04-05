@@ -142,6 +142,7 @@ body{
   left: 0;
   display: inline-block;
   background: linear-gradient(#4C69BA, #3B55A0) repeat scroll 0% 0% transparent;
+  background-color: #4263A8;
   line-height: 20px;
   height:20px;
   font-size: 12px;
