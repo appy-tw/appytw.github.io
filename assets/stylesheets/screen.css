@@ -109,6 +109,18 @@ body{
    {color: #fff;}
 }
 
+@media screen and (max-width: 320px) {
+  body {
+    font-size: 30%;
+  }
+  #header {
+    position: absolute;
+    right: 10%;
+    top: 30%;
+    left: 5%;
+   }
+}
+
 .fb-wrapper {
   width: 300px;
   padding: 20px;
