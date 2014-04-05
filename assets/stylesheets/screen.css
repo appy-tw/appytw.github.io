@@ -54,7 +54,7 @@ html, body {
   height: 100%;
   min-height: 100%;
   font-family: "Source Sans Pro", STHeitiTC-Light, droid-sans, Helvetica, Arial, "LiHei Pro", "微軟正黑體";
-  color: #fff; 
+  color: #fff;
   font-size: 100%
 }
 
@@ -109,3 +109,7 @@ body{
    {color: #fff;}
 }
 
+.fb-wrapper {
+  width: 300px;
+  padding: 20px;
+}
