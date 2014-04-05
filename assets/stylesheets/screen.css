@@ -84,6 +84,7 @@ a:hover {
 h1{
   font-size: 9em;
   color: rgba(255,255,255, 0.7);
+  white-space: nowrap;
 }
 h2 {
   font-size: 8em;
