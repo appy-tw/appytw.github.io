@@ -159,10 +159,6 @@ a.btn:active {
   padding: 30px;
 }
 
-.fb-like {
-  margin-left: 50px;
-}
-
 .fan-page {
   display: inline-block;
   background: linear-gradient(#4C69BA, #3B55A0) repeat scroll 0% 0% transparent;
@@ -173,6 +169,8 @@ a.btn:active {
   padding-left: 5px;
   padding-right: 5px;
   border-radius: 2px;
+  float: left;
+  margin-right: 5px;
 }
 
 .fan-page > a {
