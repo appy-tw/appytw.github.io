@@ -74,16 +74,20 @@ a {
 
 
 #header {
-  position: absolute;
-  right: 10%;
-  bottom: 10%;
+  margin: 0 auto;
+  width: 80%;
+  text-align: center
+ }
+ #header img{
+  width: 100%;
+  max-width: 1200px;
  }
 a:hover {
   text-decoration: none; }
 
-h1{
-  font-size: 9em;
-  color: rgba(255,255,255, 0.7);
+h1 span{
+  display: block;
+  text-indent: -9999px;
 }
 h2 {
   font-size: 8em;
@@ -95,50 +99,67 @@ body{
   background-size: cover;
   position: relative;
   }
-@media screen and (max-width: 900px) {
-  body{font-size: 70%}
+/* button styles*/
+a.btn {
+  position: relative;
+  background: #fa0;
+  color: #fff;
+  padding: 15px 50px;
+  margin-top: 1em;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 700;
+  outline: none;
+  border-radius: 5px;
+  box-shadow: 0 6px #fa8e10;
+  -webkit-transition: all 0.3s;
+  -moz-transition: all 0.3s;
+  transition: all 0.3s;
+  font-size: 2em;
+  text-decoration: none;
+  display: inline-block;
 }
-
+a.btn:after {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  -webkit-transition: all 0.3s;
+  -moz-transition: all 0.3s;
+  transition: all 0.3s;
+}
+a.btn:hover {
+  box-shadow: 0 4px #fa8e10;
+  top: 2px;
+}
+a.btn:active {
+  box-shadow: 0 0 #fa8e10;
+  top: 6px;
+}
 @media screen and (max-width: 640px) {
   body{
-    font-size: 40%;
+    font-size: 80%;
   }
   #header {
-  position: absolute;
-  right: 10%;
-  bottom: auto;
-  top: 30%;
- }
-  h1,h2
-   {color: #fff;}
+    padding-top: 1em;
+  }
+  #header{
+    width: 100%
+  }
+  a.btn{
+    margin-top: 1em;
+  }
 }
 
 @media screen and (max-width: 360px) {
-  body {
-    font-size: 30%;
-  }
-  #header {
-    position: absolute;
-    right: 10%;
-    top: 30%;
-    left: 5%;
-   }
+
 }
 
 .fb-wrapper {
-  width: 300px;
-  padding: 20px;
-  position: relative;
-}
-
-.fb-like {
-  margin-left: 50px;
+  width: 100%;
+  padding: 30px;
 }
 
 .fan-page {
-  position: absolute;
-  top: 20px;
-  left: 0;
   display: inline-block;
   background: linear-gradient(#4C69BA, #3B55A0) repeat scroll 0% 0% transparent;
   background-color: #4263A8;
@@ -148,6 +169,8 @@ body{
   padding-left: 5px;
   padding-right: 5px;
   border-radius: 2px;
+  float: left;
+  margin-right: 5px;
 }
 
 .fan-page > a {
