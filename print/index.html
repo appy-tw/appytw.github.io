@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="zh-tw" ng-app="appyApp">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>提案書</title>
+  <!-- Latest compiled and minified CSS -->
+  <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+
+  <!-- Optional theme -->
+  <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="style/main.css">
+  <!-- Latest compiled and minified JavaScript -->
+  <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+  <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular.min.js"></script>
+  <script src="js/main.js"></script>
+</head>
+<body>
+
+<div class="container" ng-controller="FormCtrl">
+<h1>填寫提案表單</h1>
+以下欄位均為必填
+<form id="proposalForm" class="form-horizontal" role="form"
+  action="http://www.uisltsc.com.tw/appendectomy/proposal.php"
+  method="post" target="pdfframe" name="proposalForm">
+  <div class="main-section section">
+    <div class="form-group" ng-class="{'has-error': proposalForm.EMAIL.$invalid}">
+      <label for="inputEmail" class="col-sm-2 control-label">電子信箱</label>
+      <div class="col-sm-10">
+        <input type="email" ng-model="email" name="EMAIL" class="form-control" id="inputEmail" placeholder="Email" required>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="inputCount" class="col-sm-2 control-label">填寫份數</label>
+      <div class="col-sm-2">
+        <input type="number" readonly ng-model="count" class="form-control" id="inputCount">
+      </div>
+      <div class="btn-group col-sm-2">
+        <button type="button" class="btn btn-default"
+          ng-click="count = count + 1">
+          <span class="glyphicon glyphicon-plus"></span>
+        </button>
+        <button type="button" class="btn btn-default"
+          ng-click="count = (count === 1 ? 1 : count - 1) ">
+          <span class="glyphicon glyphicon-minus"></span>
+        </button>
+      </div>
+      <label for="inputTarget" class="col-sm-2 control-label">罷免對象</label>
+      <div class="col-sm-4">
+        <select ng-model="selectedTarget" class="form-control" ng-options="target.district_legislator for target in districtData">
+        </select>
+      </div>
+    </div>
+  </div>
+  <div ng-form="personForm" class="section" ng-repeat="person in proposers" ng-class-even="'even'">
+    <div class="form-group">
+      <div ng-class="{ 'has-error':  personForm.Name.$invalid }">
+        <label class="col-sm-2 control-label">姓名</label>
+        <div class="col-sm-4">
+          <input type="text" ng-model="person.name" class="form-control" name="Name" required>
+        </div>
+      </div>
+      <div ng-class="{ 'has-error': personForm.IDNo.$invalid }">
+        <label class="col-sm-2 control-label">身分證字號</label>
+        <div class="col-sm-4">
+          <input type="text" rocid ng-model="person.id" class="form-control" name="IDNo" required>
+        </div>
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="col-sm-2 control-label">性別</div>
+      <div class="col-sm-4">
+        <label class="radio-inline">
+          <input type="radio" name="Sex_{{$index}}" value="M" checked>
+          男
+        </label>
+        <label class="radio-inline">
+          <input type="radio" name="Sex_{{$index}}" value="F">
+          女
+        </label>
+      </div>
+      <label class="col-sm-2 control-label">生日</label>
+      <div class="col-sm-4">
+        <select ng-model="person.birthdayYear"
+          ng-options="n.value as n.content for n in range(1895,1992)"></select>
+        <select ng-model="person.birthdayMonth"
+          ng-options="n.value as n.content for n in range(1,12)"></select>
+        <select ng-model="person.birthdayDay"
+          ng-options="n.value as n.content for n in range(1,31)"></select>
+      </div>
+    </div>
+    <div class="form-group" ng-class="{ 'has-error': personForm.Occupation.$invalid }">
+      <label for="Occupation_{{$index}}" class="col-sm-2 control-label">職業</label>
+      <div class="col-sm-10">
+        <input type="text" ng-model="person.occupation" class="form-control" name="Occupation" placeholder="請勿超過四個字" required>
+      </div>
+    </div>
+    <div class="form-group" ng-class="{ 'has-error': personForm.RegAdd.$invalid }">
+      <label class="col-sm-2 control-label">戶籍地址</label>
+      <div class="col-sm-10">
+        <input type="text" class="form-control" ng-model="person.addr" name="RegAdd" placeholder="請完全依身分證背後地址欄內容填寫，鄰里勿漏" required>
+      </div>
+    </div>
+    <input type="hidden" name="Name_{{$index}}" value="{{person.name}}">
+    <input type="hidden" name="IDNo_{{$index}}" value="{{person.id}}">
+    <input type="hidden" name="Occupation_{{$index}}" value="{{person.occupation}}">
+    <input type="hidden" name="RegAdd_{{$index}}" value="{{person.addr}}">
+    <input type="hidden" name="Birthday_y_{{$index}}" value="{{person.birthdayYear}}">
+    <input type="hidden" name="Birthday_m_{{$index}}" value="{{person.birthdayMonth}}">
+    <input type="hidden" name="Birthday_d_{{$index}}" value="{{person.birthdayDay}}">
+  </div>
+  <input type="hidden" name="Size" value="{{count}}">
+  <input type="hidden" name="DISTRICT_ID" value="{{selectedTarget.district_id}}">
+
+  <div class="text-center submit">
+    <div ng-class="{ hidden: !proposalForm.$invalid }" class="alert alert-danger">請確認上面標為紅色的欄位均已填寫，並且身分證字號無誤。</div>
+    <button type="submit" class="btn btn-primary"
+      ng-disabled="proposalForm.$invalid"
+      ng-click="preview(proposalForm)">
+      <span class="glyphicon glyphicon-print"></span> 預覽
+    </button>
+  </div>
+</form>
+
+<div id="preview-modal" class="modal fade">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title">{{modalTitle}}</h4>
+      </div>
+      <div class="modal-body">
+        <div class="text-center submit">
+          {{modalContent}}<br>
+          <button type="button" class="btn btn-primary" ng-click="print()">
+            <span class="glyphicon glyphicon-print"></span> 列印
+          </button>
+          <button ng-class="{'hidden': isIE() }" type="button"
+            class="btn btn-primary" ng-click="sendTo711(proposalForm)">
+            <span class="glyphicon glyphicon-send"></span> 傳送到 7-11 iBon 列印
+          </button>
+        </div>
+        <iframe id="pdfframe" name="pdfframe" src="dummy.html" scrolling="auto">
+          產生預覽中...
+        </iframe>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" ng-click="modalHide()">關閉</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+</div>
+</body>
+</html>
