@@ -41,7 +41,8 @@ appyApp.controller('FormCtrl', function($scope, $http, $q, $window) {
       if (ly.district_legislator === name) {
         $scope.selectedTarget = ly;
       }
-    })
+    });
+    $('#legislator-modal').modal('hide');
   };
 
   $scope.isIE = function() {

@@ -24,3 +24,17 @@
   width: 100%;
   height: 400px;
 }
+
+.legislator {
+  display: inline-block;
+  width: 100px;
+}
+
+.legislator-list {
+  margin: 0;
+  padding: 0;
+}
+
+.avatar {
+  width: 90%;
+}
