@@ -47,10 +47,13 @@
         </button>
       </div>
       <label for="inputTarget" class="col-sm-2 control-label">罷免對象</label>
-      <div class="col-sm-4">
-        <select ng-model="selectedTarget" class="form-control" ng-options="target.district_legislator for target in districtData">
-        </select>
+      <div class="col-sm-2">
+        <p class="text-center form-control-static">{{selectedTarget.district_legislator}}</p>
       </div>
+      <div class="col-sm-2">
+        <button type="button" class="btn btn-default"
+          onclick="$('#legislator-modal').modal('show');">選擇立委</button>
+        </div>
     </div>
   </div>
   <div ng-form="personForm" class="section" ng-repeat="person in proposers" ng-class-even="'even'">
@@ -144,6 +147,34 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" ng-click="modalHide()">關閉</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<div id="legislator-modal" class="modal fade">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"
+          aria-hidden="true">&times;</button>
+        <h4 class="modal-title">罷免立委選擇</h4>
+      </div>
+      <div class="modal-body">
+        <ul class="legislator-list">
+          <li class="legislator text-center"
+            ng-repeat="legislator in mly"
+            ng-if="legislator.constituency!='proportional'">
+            <a href="#" ng-click="setLegislator(legislator.name);">
+              <img class="avatar" src="{{legislator.avatar}}?size=medium">
+              {{legislator.name}}
+            </a>
+          </li>
+        </ul>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default"
+          onclick="$('#legislator-modal').modal('hide');">關閉</button>
       </div>
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
