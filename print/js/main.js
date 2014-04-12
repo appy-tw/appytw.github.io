@@ -1,9 +1,25 @@
 var appyApp = angular.module('appyApp', []);
 
+appyApp.config(function($sceDelegateProvider) {
+  $sceDelegateProvider.resourceUrlWhitelist([
+    'self',
+    'http://www.uisltsc.com.tw/**'
+  ]);
+});
+
 appyApp.controller('FormCtrl', function($scope, $http, $q, $window) {
+  var contentSending = '資料傳送到 7-11 ibon 中...';
+  var titleSending = '傳送到 7-11 ibon';
+  var contentPreview = '提議書預覽數秒鐘後將會產生在下面，請使用預覽框內的列印功能列印提議書，或是按上面的按鈕傳送到 ibon 列印';
+  var titlePreview = '預覽提議書';
   var mly = $http.get('data/mly-8.json')
   var constituency = $http.get('data/constituency.json');
   var districtData = $http.get('data/district-data.json');
+  var options = {
+    headers: { 'Content-Type': undefined },
+    transformRequest: function(data) { return data; }
+  };
+
   $q.all([mly, constituency, districtData]).then(function(results) {
     $scope.mly = results[0].data;
     $scope.constituency = results[1].data;
@@ -12,6 +28,7 @@ appyApp.controller('FormCtrl', function($scope, $http, $q, $window) {
   });
 
   $scope.count = 1;
+  $scope.pdfGeneratorUrl = 'http://www.uisltsc.com.tw/appendectomy/proposal.php';
 
   var defaultData = {
     birthdayYear: 1992,
@@ -32,43 +49,38 @@ appyApp.controller('FormCtrl', function($scope, $http, $q, $window) {
     return /msie/.test(ua) || /Trident/.test(ua);
   };
 
-  $scope.print = function() {
-    var iframe = window.frames['pdfframe'];
-    iframe.focus();
-    iframe.print();
-  }
+  $scope.sendToIbon = function(data) {
+    var url = 'http://www.ibon.com.tw/0100/file_upload.aspx';
+    var uploadData = new FormData();
+    var fileBlob = new Blob([data], { type: 'application/pdf'});
+    uploadData.append('__VIEWSTATE', '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');
+    uploadData.append('ctl00$Group_header1$txtKeyboard', '');
+    uploadData.append('textarea', '');
+    uploadData.append('agree', '1');
+    uploadData.append('ctl00$cphContent$txtUserName', 'Appendectomy team');
+    uploadData.append('ctl00$cphContent$txtEmail', $scope.email);
+    uploadData.append('ctl00$cphContent$fuFile', fileBlob, 'doc.pdf');
+    uploadData.append('ctl00$cphContent$btnUpload', 'OK');
 
-  $scope.sendTo711 = function() {
-    $('#preview-modal').modal('show');
-    var options = {
-      headers: { 'Content-Type': undefined },
-      transformRequest: function(data) { return data; }
-    };
-    var form = new FormData(document.getElementById('proposalForm'));
-    $http.post('proposal.php', form, options).success(function(result) {
-      var url = 'http://www.ibon.com.tw/0100/file_upload.aspx';
-      var uploadData = new FormData();
-      var fileBlob = new Blob([result], { type: 'application/pdf'});
-      uploadData.append('__VIEWSTATE', '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');
-      uploadData.append('ctl00$Group_header1$txtKeyboard', '');
-      uploadData.append('textarea', '');
-      uploadData.append('agree', '1');
-      uploadData.append('ctl00$cphContent$txtUserName', 'Appendectomy team');
-      uploadData.append('ctl00$cphContent$txtEmail', $scope.email);
-      uploadData.append('ctl00$cphContent$fuFile', fileBlob, 'doc.pdf');
-      uploadData.append('ctl00$cphContent$btnUpload', 'OK');
-
-      var second = $http.post(url, uploadData, options);
-      second.error(function(data, status, headers, config) {
-        $scope.modalContent = '傳送完成！請到你的信箱獲得 ibon 下載編號';
-      })
+    var second = $http.post(url, uploadData, options);
+    second.error(function(data, status, headers, config) {
+      $scope.modalContent = '傳送完成！請到你的信箱獲得 ibon 下載編號';
     });
   };
 
-  var contentSending = '資料傳送到 7-11 ibon 中...';
-  var titleSending = '傳送到 7-11 ibon';
-  var contentPreview = '產生提議書需要數秒鐘，請稍候...';
-  var titlePreview = '預覽提議書';
+  $scope.sendTo711 = function() {
+    $scope.modalTitle = titleSending;
+    $scope.modalContent = contentSending;
+
+    var form = new FormData(document.getElementById('proposalForm'));
+    $http.post($scope.pdfGeneratorUrl, form, options).success(function(data) {
+      $scope.sendToIbon(data);
+    })
+    .error(function(data) {
+      $scope.sendToIbon(data);
+    });
+  };
+
   $scope.modalTitle = titlePreview;
   $scope.modalContent = contentPreview;
   $scope.modalHide = function() {
@@ -86,7 +98,7 @@ appyApp.controller('FormCtrl', function($scope, $http, $q, $window) {
     return result;
   };
 
-  $scope.preview = function(form) {
+  $scope.preview = function() {
     $('#preview-modal').modal('show');
   };
 
