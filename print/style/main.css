@@ -1,5 +1,7 @@
 .even {
-  background-color: #EEE;
+  background-color: #fdfdfd;
+  border-top: 1px solid #eee;
+  border-bottom: 1px solid #eee;
 }
 
 .main-section {
@@ -31,9 +33,163 @@
 }
 
 .legislator-list {
-  margin-top: 20px;
+  margin: 0;
+  padding: 0;
 }
 
 .avatar {
   width: 90%;
+}
+
+/* custom styles*/
+body{
+  background: #222 url(/assets/images/dirt.png) repeat
+}
+.main.container{
+  background-color: #fafafa;
+  padding: 0 0 30px;
+  border-top: 8px solid #fa0;
+  margin-top: 0px;
+  -webkit-border-radius: 5px 5px 3px 3px;
+  -moz-border-radius: 5px 5px 3px 3px;
+  border-radius: 5px 5px 3px 3px;
+  position: relative;
+  -webkit-box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.8);
+  -moz-box-shadow:    0px 0px 5px 0px rgba(0, 0, 0, 0.8);
+  box-shadow:         0px 0px 5px 0px rgba(0, 0, 0, 0.8);
+}
+.dec{
+  width: 150px;
+  height: 150px;
+  display: block;
+  position: absolute;
+  left: -35px;
+  top: -20px;
+}
+.dec img{
+  width: 100%
+}
+p.intro{
+  padding: 0 130px
+}
+form{
+  padding: 0
+}
+.main-section{
+  padding: 20px
+}
+h1{
+  padding: 20px 0 15px
+}
+em{
+  font-size: 13px;
+  display: block;
+  font-style: normal;
+}
+.btn.btn-primary{
+  width: 95%;
+  font-size: 20px;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+}
+.btn.disabled, .btn[disabled], fieldset[disabled] .btn{
+  background: #ccc;
+  border-color: #ccc;
+}
+.alert-danger{
+  box-shadow: none;
+  border: none;
+  border-radius: 0;
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  background: #ffe3e3;
+  margin: -30px 15px 30px;
+
+}
+.has-error .form-control{
+  border-color: #ff9a9a;
+  border-width: 2px;
+  color: #222;
+}
+.has-error .form-control:focus{
+  border-color: #e05262
+}
+.has-error .control-label {
+  color: #f05656;
+}
+.form-control{
+  border-width: 2px;
+  color: #999;
+}
+p.form-control-static{
+  color: #2c8ca4;
+  font-size: 18px;
+  font-weight: bold;
+  padding-top: 3px !important
+}
+input:focus{
+  box-shadow: none !important 
+}
+footer{
+  padding: 40px 0 10px;
+  color: #ccc;
+}
+footer a,footer a:hover{
+  color: #fff
+}
+.fb-wrapper {
+  width: 740px;
+  padding: 30px 10px 20px;
+  text-align: right;
+  margin: 0 auto;
+}
+.fan-page {
+  display: inline-block;
+  background: linear-gradient(#4C69BA, #3B55A0) repeat scroll 0% 0% transparent;
+  background-color: #4263A8;
+  line-height: 20px;
+  height: 20px;
+  font-size: 12px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-radius: 2px;
+  float: right;
+  margin-left: 5px;
+}
+.fan-page > a {
+  color: white;
+  text-decoration: none;
+}
+@media (max-width: 768px) {
+  .dec{
+    position: relative;
+    left: auto;
+    top: -30px;
+    margin: 0 auto
+  }
+  .container{
+    margin-top: 30px;
+  }
+  h1{
+    padding-top: 0;
+    margin-top: 0;
+  }
+  p.intro{
+    padding: 0 20px
+  }
+  em.text-center{
+    text-align: left;
+    padding-left: 20px
+  }
+  label.col-xs-12{
+    padding-top: 20px !important;
+    display: block;
+  }
+  p.text-center{
+    text-align: left;
+  }
+  .fb-wrapper {
+    width: 100%;
+    text-align: left
+  }
 }
