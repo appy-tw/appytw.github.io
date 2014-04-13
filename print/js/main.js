@@ -7,19 +7,6 @@ appyApp.config(function($sceDelegateProvider) {
   ]);
 });
 
-appyApp.filter('district', function() {
-  return function(legislators, districts) {
-    if (!districts) {
-      return legislators;
-    }
-    return legislators.filter(function(ly) {
-      return districts.some(function(d) {
-        return d === ly.constituency[0]+','+ly.constituency[1];
-      })
-    });
-  };
-})
-
 appyApp.controller('FormCtrl', function($scope, $http, $q, $window) {
   var contentSending = '資料傳送到 7-11 ibon 中...';
   var titleSending = '傳送到 7-11 ibon';
@@ -28,19 +15,16 @@ appyApp.controller('FormCtrl', function($scope, $http, $q, $window) {
   var mly = $http.get('data/mly-8.json')
   var constituency = $http.get('data/constituency.json');
   var districtData = $http.get('data/district-data.json');
-  var districts = $http.get('data/districts.json');
   var options = {
     headers: { 'Content-Type': undefined },
     transformRequest: function(data) { return data; }
   };
 
-  $q.all([mly, constituency, districtData, districts]).then(function(results) {
+  $q.all([mly, constituency, districtData]).then(function(results) {
     $scope.mly = results[0].data;
     $scope.constituency = results[1].data;
     $scope.districtData = results[2].data;
-    $scope.districts = results[3].data;
     $scope.setLegislator('蔡正元');
-    $scope.initLegislatorFilter();
   });
 
   $scope.count = 1;
@@ -117,20 +101,6 @@ appyApp.controller('FormCtrl', function($scope, $http, $q, $window) {
 
   $scope.preview = function() {
     $('#preview-modal').modal('show');
-  };
-
-  $scope.initLegislatorFilter = function() {
-    $scope.$watch('selectedCity', function(newValue, oldValue) {
-      if (!newValue) {
-        return;
-      }
-
-      $scope.filteredDistricts = Object.keys($scope.constituency).filter(function(c) {
-        return $scope.constituency[c].some(function(dist) {
-          return (dist.indexOf(newValue.name) !== -1);
-        })
-      })
-    });
   };
 
   $scope.$watch('count', function(newValue, oldValue) {

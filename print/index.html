@@ -17,114 +17,124 @@
   <script src="js/main.js"></script>
 </head>
 <body>
-
-<div class="container" ng-controller="FormCtrl">
-<h1>填寫提案表單</h1>
-以下欄位均為必填
-<form id="proposalForm" class="form-horizontal" role="form"
+<a id="top"></a>
+<div class="fb-wrapper">
+  <div class="fan-page"><a target="_blank" href="https://www.facebook.com/Appendectomy"><i class="fa fa-heart"></i> 粉絲團</a></div>
+    <div class="fb-like fb_iframe_widget" data-href="http://appy.tw/" data-layout="button_count" data-action="like" data-show-faces="false" data-share="true" fb-xfbml-state="rendered" fb-iframe-plugin-query="action=like&amp;app_id=1413035375624493&amp;href=http%3A%2F%2Fappy.tw%2F&amp;layout=button_count&amp;locale=en_US&amp;sdk=joey&amp;share=true&amp;show_faces=false"><span style="vertical-align: bottom; width: 124px; height: 20px;"><iframe name="f10e8e787" width="1000px" height="1000px" frameborder="0" allowtransparency="true" scrolling="no" title="fb:like Facebook Social Plugin" src="http://www.facebook.com/plugins/like.php?action=like&amp;app_id=1413035375624493&amp;channel=http%3A%2F%2Fstatic.ak.facebook.com%2Fconnect%2Fxd_arbiter%2F8n77RrR4jg0.js%3Fversion%3D40%23cb%3Df235ad2b7c%26domain%3Dappy.tw%26origin%3Dhttp%253A%252F%252Fappy.tw%252Ff228dbc5a4%26relation%3Dparent.parent&amp;href=http%3A%2F%2Fappy.tw%2F&amp;layout=button_count&amp;locale=en_US&amp;sdk=joey&amp;share=true&amp;show_faces=false" class="" style="border: none; visibility: visible; width: 124px; height: 20px;"></iframe></span>
+  </div>
+</div>
+<div class="container main" ng-controller="FormCtrl">
+  <div class="dec">
+    <img src="../assets/images/logo-b.png">
+  </div>
+  <h1 class="text-center">2%罷免提議書</h1>
+  <p class="intro">這邊放一些說明，應該放一些說明，放一些說明說明提議書是什麼然後 2% 和  13% 的差別，以及這個頁面的簡單操作說明</p>
+  <em class="text-center">*以下欄位均為必填</em>
+  <form id="proposalForm" class="form-horizontal" role="form"
   action="{{ pdfGeneratorUrl }}"
   method="post" target="pdfframe" name="proposalForm">
-  <div class="main-section section">
-    <div class="form-group" ng-class="{'has-error': proposalForm.EMAIL.$invalid}">
-      <label for="inputEmail" class="col-sm-2 control-label">電子信箱</label>
-      <div class="col-sm-10">
-        <input type="email" ng-model="email" name="EMAIL" class="form-control" id="inputEmail" placeholder="Email" required>
-      </div>
-    </div>
-    <div class="form-group">
-      <label for="inputCount" class="col-sm-2 control-label">填寫份數</label>
-      <div class="col-sm-2">
-        <input type="number" readonly ng-model="count" class="form-control" id="inputCount">
-      </div>
-      <div class="btn-group col-sm-2">
-        <button type="button" class="btn btn-default"
-          ng-click="count = count + 1">
-          <span class="glyphicon glyphicon-plus"></span>
-        </button>
-        <button type="button" class="btn btn-default"
-          ng-click="count = (count === 1 ? 1 : count - 1) ">
-          <span class="glyphicon glyphicon-minus"></span>
-        </button>
-      </div>
-      <label for="inputTarget" class="col-sm-2 control-label">罷免對象</label>
-      <div class="col-sm-2">
-        <p class="text-center form-control-static">{{selectedTarget.district_legislator}}</p>
-      </div>
-      <div class="col-sm-2">
-        <button type="button" class="btn btn-default"
-          onclick="$('#legislator-modal').modal('show');">選擇立委</button>
+    <div class="main-section section">
+      <div class="form-group">
+        <label for="inputCount" class="col-sm-2  col-xs-12 control-label">填寫份數</label>
+        <div class="col-sm-2 col-xs-8">
+          <input type="number" readonly ng-model="count" class="form-control" id="inputCount">
         </div>
+        <div class="btn-group col-sm-2 col-xs-4">
+          <button type="button" class="btn btn-default"
+            ng-click="count = count + 1">
+            <span class="glyphicon glyphicon-plus"></span>
+          </button>
+          <button type="button" class="btn btn-default"
+            ng-click="count = (count === 1 ? 1 : count - 1) ">
+            <span class="glyphicon glyphicon-minus"></span>
+          </button>
+        </div>
+        <label for="inputTarget" class="col-sm-2 col-xs-12 control-label">罷免對象</label>
+        <div class="col-sm-2 col-xs-8">
+          <p class="text-center form-control-static">{{selectedTarget.district_legislator}}</p>
+        </div>
+        <div class="col-sm-2 col-xs-4">
+          <button type="button" class="btn btn-default"
+            onclick="$('#legislator-modal').modal('show');">選擇立委</button>
+        </div>
+      </div>
+      <div class="form-group" ng-class="{'has-error': proposalForm.EMAIL.$invalid}">
+        <label for="inputEmail" class="col-sm-2 control-label">電子信箱</label>
+        <div class="col-sm-10">
+          <input type="email" ng-model="email" name="EMAIL" class="form-control" id="inputEmail" placeholder="Email" required>
+        </div>
+      </div>
+      
     </div>
-  </div>
-  <div ng-form="personForm" class="section" ng-repeat="person in proposers" ng-class-even="'even'">
-    <div class="form-group">
-      <div ng-class="{ 'has-error':  personForm.Name.$invalid }">
-        <label class="col-sm-2 control-label">姓名</label>
+    <div ng-form="personForm" class="section" ng-repeat="person in proposers" ng-class-even="'even'">
+      <div class="form-group">
+        <div ng-class="{ 'has-error':  personForm.Name.$invalid }">
+          <label class="col-sm-2 control-label">姓名</label>
+          <div class="col-sm-4">
+            <input type="text" ng-model="person.name" class="form-control" name="Name" required>
+          </div>
+        </div>
+        <div ng-class="{ 'has-error': personForm.IDNo.$invalid }">
+          <label class="col-sm-2 control-label">身分證字號</label>
+          <div class="col-sm-4">
+            <input type="text" rocid ng-model="person.id" class="form-control" name="IDNo" required>
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="col-sm-2 control-label">性別</div>
         <div class="col-sm-4">
-          <input type="text" ng-model="person.name" class="form-control" name="Name" required>
+          <label class="radio-inline">
+            <input type="radio" name="Sex_{{$index}}" value="M" checked>
+            男
+          </label>
+          <label class="radio-inline">
+            <input type="radio" name="Sex_{{$index}}" value="F">
+            女
+          </label>
         </div>
-      </div>
-      <div ng-class="{ 'has-error': personForm.IDNo.$invalid }">
-        <label class="col-sm-2 control-label">身分證字號</label>
+        <label class="col-sm-2 control-label">生日</label>
         <div class="col-sm-4">
-          <input type="text" rocid ng-model="person.id" class="form-control" name="IDNo" required>
+          <select ng-model="person.birthdayYear"
+            ng-options="n.value as n.content for n in range(1895,1992)"></select>
+          <select ng-model="person.birthdayMonth"
+            ng-options="n.value as n.content for n in range(1,12)"></select>
+          <select ng-model="person.birthdayDay"
+            ng-options="n.value as n.content for n in range(1,31)"></select>
         </div>
       </div>
-    </div>
-    <div class="form-group">
-      <div class="col-sm-2 control-label">性別</div>
-      <div class="col-sm-4">
-        <label class="radio-inline">
-          <input type="radio" name="Sex_{{$index}}" value="M" checked>
-          男
-        </label>
-        <label class="radio-inline">
-          <input type="radio" name="Sex_{{$index}}" value="F">
-          女
-        </label>
+      <div class="form-group" ng-class="{ 'has-error': personForm.Occupation.$invalid }">
+        <label for="Occupation_{{$index}}" class="col-sm-2 control-label">職業</label>
+        <div class="col-sm-10">
+          <input type="text" ng-model="person.occupation" class="form-control" name="Occupation" placeholder="請勿超過四個字" required>
+        </div>
       </div>
-      <label class="col-sm-2 control-label">生日</label>
-      <div class="col-sm-4">
-        <select ng-model="person.birthdayYear"
-          ng-options="n.value as n.content for n in range(1895,1992)"></select>
-        <select ng-model="person.birthdayMonth"
-          ng-options="n.value as n.content for n in range(1,12)"></select>
-        <select ng-model="person.birthdayDay"
-          ng-options="n.value as n.content for n in range(1,31)"></select>
+      <div class="form-group" ng-class="{ 'has-error': personForm.RegAdd.$invalid }">
+        <label class="col-sm-2 control-label">戶籍地址</label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" ng-model="person.addr" name="RegAdd" placeholder="請完全依身分證背後地址欄內容填寫，鄰里勿漏" required>
+        </div>
       </div>
+      <input type="hidden" name="Name_{{$index}}" value="{{person.name}}">
+      <input type="hidden" name="IDNo_{{$index}}" value="{{person.id}}">
+      <input type="hidden" name="Occupation_{{$index}}" value="{{person.occupation}}">
+      <input type="hidden" name="RegAdd_{{$index}}" value="{{person.addr}}">
+      <input type="hidden" name="Birthday_y_{{$index}}" value="{{person.birthdayYear}}">
+      <input type="hidden" name="Birthday_m_{{$index}}" value="{{person.birthdayMonth}}">
+      <input type="hidden" name="Birthday_d_{{$index}}" value="{{person.birthdayDay}}">
     </div>
-    <div class="form-group" ng-class="{ 'has-error': personForm.Occupation.$invalid }">
-      <label for="Occupation_{{$index}}" class="col-sm-2 control-label">職業</label>
-      <div class="col-sm-10">
-        <input type="text" ng-model="person.occupation" class="form-control" name="Occupation" placeholder="請勿超過四個字" required>
-      </div>
-    </div>
-    <div class="form-group" ng-class="{ 'has-error': personForm.RegAdd.$invalid }">
-      <label class="col-sm-2 control-label">戶籍地址</label>
-      <div class="col-sm-10">
-        <input type="text" class="form-control" ng-model="person.addr" name="RegAdd" placeholder="請完全依身分證背後地址欄內容填寫，鄰里勿漏" required>
-      </div>
-    </div>
-    <input type="hidden" name="Name_{{$index}}" value="{{person.name}}">
-    <input type="hidden" name="IDNo_{{$index}}" value="{{person.id}}">
-    <input type="hidden" name="Occupation_{{$index}}" value="{{person.occupation}}">
-    <input type="hidden" name="RegAdd_{{$index}}" value="{{person.addr}}">
-    <input type="hidden" name="Birthday_y_{{$index}}" value="{{person.birthdayYear}}">
-    <input type="hidden" name="Birthday_m_{{$index}}" value="{{person.birthdayMonth}}">
-    <input type="hidden" name="Birthday_d_{{$index}}" value="{{person.birthdayDay}}">
-  </div>
-  <input type="hidden" name="Size" value="{{count}}">
-  <input type="hidden" name="DISTRICT_ID" value="{{selectedTarget.district_id}}">
+    <input type="hidden" name="Size" value="{{count}}">
+    <input type="hidden" name="DISTRICT_ID" value="{{selectedTarget.district_id}}">
 
-  <div class="text-center submit">
-    <div ng-class="{ hidden: !proposalForm.$invalid }" class="alert alert-danger">請確認上面標為紅色的欄位均已填寫，並且身分證字號無誤。</div>
-    <button type="submit" class="btn btn-primary"
-      ng-disabled="proposalForm.$invalid"
-      ng-click="preview(proposalForm)">
-      <span class="glyphicon glyphicon-print"></span> 預覽
-    </button>
-  </div>
-</form>
+    <div class="text-center submit">
+      <div ng-class="{ hidden: !proposalForm.$invalid }" class="alert alert-danger">請確認上面標為紅色的欄位均已填寫，並且身分證字號無誤。</div>
+      <button type="submit" class="btn btn-primary"
+        ng-disabled="proposalForm.$invalid"
+        ng-click="preview(proposalForm)">
+        <span class="glyphicon glyphicon-print"></span> 預覽
+      </button>
+    </div>
+  </form>
 
 <div id="preview-modal" class="modal fade">
   <div class="modal-dialog modal-lg">
@@ -161,19 +171,9 @@
         <h4 class="modal-title">罷免立委選擇</h4>
       </div>
       <div class="modal-body">
-        <form class="form-inline" role="form">
-          <div class="form-group">
-            <label>過濾條件：</label>
-            <input type="text" class="form-control" id="filterName"
-              ng-model="search.name" placeholder="立委姓名">
-            縣市：
-              <select ng-model="selectedCity"
-                ng-options="key for (key, value) in districts"></select>
-          </div>
-        </form>
         <ul class="legislator-list">
           <li class="legislator text-center"
-            ng-repeat="legislator in mly | filter:search | district:filteredDistricts"
+            ng-repeat="legislator in mly"
             ng-if="legislator.constituency!='proportional'">
             <a href="#" ng-click="setLegislator(legislator.name);">
               <img class="avatar" src="{{legislator.avatar}}?size=medium">
@@ -191,5 +191,18 @@
 </div><!-- /.modal -->
 
 </div>
+<footer>
+  <div class="container">
+  <div class="row">
+    <div class="col-sm-4 copyright">
+      <p>Created by <a href="#" target="_blank">割闌尾小組</a></p>
+    </div>
+    <div class="col-sm-8 social pull-right text-right">
+      <a href="#top" class="cta scrollAnchor">TOP</a>
+      <a href="https://www.facebook.com/Appendectomy"><span aria-hidden="true" class="icon-facebook"></span></a>    
+    </div>
+  </div>
+</div>
+</footer>
 </body>
 </html>
