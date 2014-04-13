@@ -168,7 +168,9 @@
               ng-model="search.name" placeholder="立委姓名">
             縣市：
               <select ng-model="selectedCity"
-                ng-options="key for (key, value) in districts"></select>
+                ng-options="key for (key, value) in districts">
+                <option value="">全部</option>
+              </select>
           </div>
         </form>
         <ul class="legislator-list">
