@@ -161,9 +161,19 @@
         <h4 class="modal-title">罷免立委選擇</h4>
       </div>
       <div class="modal-body">
+        <form class="form-inline" role="form">
+          <div class="form-group">
+            <label>過濾條件：</label>
+            <input type="text" class="form-control" id="filterName"
+              ng-model="search.name" placeholder="立委姓名">
+            縣市：
+              <select ng-model="selectedCity"
+                ng-options="key for (key, value) in districts"></select>
+          </div>
+        </form>
         <ul class="legislator-list">
           <li class="legislator text-center"
-            ng-repeat="legislator in mly"
+            ng-repeat="legislator in mly | filter:search | district:filteredDistricts"
             ng-if="legislator.constituency!='proportional'">
             <a href="#" ng-click="setLegislator(legislator.name);">
               <img class="avatar" src="{{legislator.avatar}}?size=medium">
