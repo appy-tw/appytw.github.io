@@ -12,6 +12,7 @@ appyApp.filter('district', function() {
     if (!districts) {
       return legislators;
     }
+
     return legislators.filter(function(ly) {
       return districts.some(function(d) {
         return d === ly.constituency[0]+','+ly.constituency[1];
@@ -122,6 +123,7 @@ appyApp.controller('FormCtrl', function($scope, $http, $q, $window) {
   $scope.initLegislatorFilter = function() {
     $scope.$watch('selectedCity', function(newValue, oldValue) {
       if (!newValue) {
+        $scope.filteredDistricts = Object.keys($scope.constituency);
         return;
       }
 
