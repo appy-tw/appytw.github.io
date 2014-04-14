@@ -17,10 +17,19 @@
   <script src="js/main.js"></script>
 </head>
 <body>
-
-<div class="container" ng-controller="FormCtrl">
-<h1>填寫提案表單</h1>
-以下欄位均為必填
+<a id="top"></a>
+<div class="fb-wrapper">
+  <div class="fan-page"><a target="_blank" href="https://www.facebook.com/Appendectomy"><i class="fa fa-heart"></i> 粉絲團</a></div>
+    <div class="fb-like fb_iframe_widget" data-href="http://appy.tw/" data-layout="button_count" data-action="like" data-show-faces="false" data-share="true" fb-xfbml-state="rendered" fb-iframe-plugin-query="action=like&amp;app_id=1413035375624493&amp;href=http%3A%2F%2Fappy.tw%2F&amp;layout=button_count&amp;locale=en_US&amp;sdk=joey&amp;share=true&amp;show_faces=false"><span style="vertical-align: bottom; width: 124px; height: 20px;"><iframe name="f10e8e787" width="1000px" height="1000px" frameborder="0" allowtransparency="true" scrolling="no" title="fb:like Facebook Social Plugin" src="http://www.facebook.com/plugins/like.php?action=like&amp;app_id=1413035375624493&amp;channel=http%3A%2F%2Fstatic.ak.facebook.com%2Fconnect%2Fxd_arbiter%2F8n77RrR4jg0.js%3Fversion%3D40%23cb%3Df235ad2b7c%26domain%3Dappy.tw%26origin%3Dhttp%253A%252F%252Fappy.tw%252Ff228dbc5a4%26relation%3Dparent.parent&amp;href=http%3A%2F%2Fappy.tw%2F&amp;layout=button_count&amp;locale=en_US&amp;sdk=joey&amp;share=true&amp;show_faces=false" class="" style="border: none; visibility: visible; width: 124px; height: 20px;"></iframe></span>
+  </div>
+</div>
+<div class="container main" ng-controller="FormCtrl">
+  <div class="dec">
+    <img src="../assets/images/logo-b.png">
+  </div>
+  <h1 class="text-center">填寫提案表單</h1>
+  <p class="intro">這邊放一些說明，應該放一些說明，放一些說明說明提議書是什麼然後 2% 和  13% 的差別，以及這個頁面的簡單操作說明</p>
+  <em class="text-center">*以下欄位均為必填</em>
 <form id="proposalForm" class="form-horizontal" role="form"
   action="{{ pdfGeneratorUrl }}"
   method="post" target="pdfframe" name="proposalForm">
@@ -32,11 +41,11 @@
       </div>
     </div>
     <div class="form-group">
-      <label for="inputCount" class="col-sm-2 control-label">填寫份數</label>
-      <div class="col-sm-2">
+      <label for="inputCount" class="col-sm-2 col-xs-12 control-label">填寫份數</label>
+      <div class="col-sm-2 col-xs-8">
         <input type="number" readonly ng-model="count" class="form-control" id="inputCount">
       </div>
-      <div class="btn-group col-sm-2">
+      <div class="btn-group col-sm-2 col-xs-4">
         <button type="button" class="btn btn-default"
           ng-click="count = count + 1">
           <span class="glyphicon glyphicon-plus"></span>
@@ -46,11 +55,11 @@
           <span class="glyphicon glyphicon-minus"></span>
         </button>
       </div>
-      <label for="inputTarget" class="col-sm-2 control-label">罷免對象</label>
-      <div class="col-sm-2">
+      <label for="inputTarget" class="col-sm-2 col-xs-12 control-label">罷免對象</label>
+      <div class="col-sm-2 col-xs-8">
         <p class="text-center form-control-static">{{selectedTarget.district_legislator}}</p>
       </div>
-      <div class="col-sm-2">
+      <div class="col-sm-2 col-xs-4">
         <button type="button" class="btn btn-default"
           onclick="$('#legislator-modal').modal('show');">選擇立委</button>
         </div>
