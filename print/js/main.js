@@ -21,7 +21,7 @@ appyApp.filter('district', function() {
   };
 })
 
-appyApp.controller('FormCtrl', function($scope, $http, $q, $window) {
+appyApp.controller('FormCtrl', function($scope, $http, $q, $window, $location) {
   var contentSending = '資料傳送到 7-11 ibon 中...';
   var titleSending = '傳送到 7-11 ibon';
   var contentPreview = '提議書預覽數秒鐘後將會產生在下面，請使用預覽框內的列印功能列印提議書，或是按上面的按鈕傳送到 ibon 列印';
@@ -40,7 +40,9 @@ appyApp.controller('FormCtrl', function($scope, $http, $q, $window) {
     $scope.constituency = results[1].data;
     $scope.districtData = results[2].data;
     $scope.districts = results[3].data;
-    $scope.setLegislator('蔡正元');
+    var defaultLegislator = $location.path();
+    defaultLegislator = defaultLegislator ? defaultLegislator.substr(1) : '蔡正元';
+    $scope.setLegislator(defaultLegislator);
     $scope.initLegislatorFilter();
   });
 
