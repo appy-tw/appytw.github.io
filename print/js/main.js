@@ -59,6 +59,16 @@ appyApp.controller('FormCtrl', function($scope, $http, $q, $window) {
         $scope.selectedTarget = ly;
       }
     });
+    $scope.mly.forEach(function(ly) {
+      var constituency, cityname;
+      if (ly.name === name) {
+        constituency = ly.constituency.join(',');
+        cityname = $scope.constituency[constituency][0].split(',')[0];
+        $scope.proposers.forEach(function(person) {
+          person.addrCity = $scope.districts[cityname];
+        });
+      }
+    });
     $('#legislator-modal').modal('hide');
   };
 
@@ -130,8 +140,8 @@ appyApp.controller('FormCtrl', function($scope, $http, $q, $window) {
       $scope.filteredDistricts = Object.keys($scope.constituency).filter(function(c) {
         return $scope.constituency[c].some(function(dist) {
           return (dist.indexOf(newValue.name) !== -1);
-        })
-      })
+        });
+      });
     });
   };
 
