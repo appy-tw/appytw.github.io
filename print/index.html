@@ -99,16 +99,43 @@
         <input type="text" ng-model="person.occupation" class="form-control" name="Occupation" placeholder="請勿超過四個字" required>
       </div>
     </div>
-    <div class="form-group" ng-class="{ 'has-error': personForm.RegAdd.$invalid }">
+    <div class="form-group" ng-class="{ 'has-error': personForm.RegAddVillage.$invalid }">
       <label class="col-sm-2 control-label">戶籍地址</label>
-      <div class="col-sm-10">
-        <input type="text" class="form-control" ng-model="person.addr" name="RegAdd" placeholder="請完全依身分證背後地址欄內容填寫，鄰里勿漏" required>
+      <div class="col-sm-10 form-inline">
+        <select ng-model="person.addrCity" class="form-control" name="RegAddCity"
+          ng-change="person.addrVillage = null; person.addrDistrict = null"
+          ng-options="key for (key, value) in districts" required>
+          <option value="">縣市</option>
+        </select>
+        <select ng-model="person.addrDistrict" class="form-control" name="RegAddDistrict"
+          ng-change="person.addrVillage = null"
+          ng-options="key for (key, value) in person.addrCity.contains" required>
+          <option value="">區域/鄉鎮</options>
+        </select>
+        <select ng-model="person.addrVillage" class="form-control" name="RegAddVillage"
+          ng-options="key for (key, value) in person.addrDistrict.contains" required>
+          <option value="">村里</options>
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="col-sm-2 col-sm-offset-2">
+        <div class="input-group" ng-class="{ 'has-error': personForm.RegAddNeighborhood.$invalid }">
+          <input type="number" class="form-control" ng-model="person.addrNeighborhood"
+            name="RegAddNeighborhood" required>
+          <span class="input-group-addon">鄰</span>
+        </div>
+      </div>
+      <div class="col-sm-8" ng-class="{ 'has-error': personForm.RegAddDetailAddress.$invalid }">
+        <input type="text" class="form-control" name="RegAddDetailAddress"
+          ng-model="person.addrDetail" required placeholder="請填入詳細地址，包含街道與門牌號碼">
       </div>
     </div>
     <input type="hidden" name="Name_{{$index}}" value="{{person.name}}">
     <input type="hidden" name="IDNo_{{$index}}" value="{{person.id}}">
     <input type="hidden" name="Occupation_{{$index}}" value="{{person.occupation}}">
-    <input type="hidden" name="RegAdd_{{$index}}" value="{{person.addr}}">
+    <input type="hidden" name="RegAdd_{{$index}}"
+      value="{{person.addrCity.name}} {{person.addrDistrict.name}} {{person.addrVillage.name}} {{person.addrNeighborhood}}鄰 {{person.addrDetail}}">
     <input type="hidden" name="Birthday_y_{{$index}}" value="{{person.birthdayYear}}">
     <input type="hidden" name="Birthday_m_{{$index}}" value="{{person.birthdayMonth}}">
     <input type="hidden" name="Birthday_d_{{$index}}" value="{{person.birthdayDay}}">
