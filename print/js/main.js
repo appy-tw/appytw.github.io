@@ -28,18 +28,16 @@ appyApp.controller('FormCtrl', function($scope, $http, $q, $window, $location) {
   var titlePreview = '預覽提議書';
   var mly = $http.get('data/mly-8.json')
   var constituency = $http.get('data/constituency.json');
-  var districtData = $http.get('data/district-data.json');
   var districts = $http.get('data/districts.json');
   var options = {
     headers: { 'Content-Type': undefined },
     transformRequest: function(data) { return data; }
   };
 
-  $q.all([mly, constituency, districtData, districts]).then(function(results) {
+  $q.all([mly, constituency, districts]).then(function(results) {
     $scope.mly = results[0].data;
     $scope.constituency = results[1].data;
-    $scope.districtData = results[2].data;
-    $scope.districts = results[3].data;
+    $scope.districts = results[2].data;
     var legislator = $location.path().substr(1);
     $scope.setLegislator(legislator);
     $scope.initLegislatorFilter();
@@ -55,14 +53,10 @@ appyApp.controller('FormCtrl', function($scope, $http, $q, $window, $location) {
   };
 
   $scope.setLegislator = function(name) {
-    angular.forEach($scope.districtData, function(ly) {
-      if (ly.district_legislator === name) {
-        $scope.selectedTarget = ly;
-      }
-    });
     angular.forEach($scope.mly, function(ly) {
       var constituency, cityname;
       if (ly.name === name) {
+        $scope.selectedTarget = ly;
         constituency = ly.constituency.join(',');
         cityname = $scope.constituency[constituency][0].split(',')[0];
         angular.forEach($scope.proposers, function(person) {
