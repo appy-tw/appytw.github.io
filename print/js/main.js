@@ -56,17 +56,17 @@ appyApp.controller('FormCtrl', function($scope, $http, $q, $window, $location) {
   };
 
   $scope.setLegislator = function(name) {
-    $scope.districtData.forEach(function(ly) {
+    angular.forEach($scope.districtData, function(ly) {
       if (ly.district_legislator === name) {
         $scope.selectedTarget = ly;
       }
     });
-    $scope.mly.forEach(function(ly) {
+    angular.forEach($scope.mly, function(ly) {
       var constituency, cityname;
       if (ly.name === name) {
         constituency = ly.constituency.join(',');
         cityname = $scope.constituency[constituency][0].split(',')[0];
-        $scope.proposers.forEach(function(person) {
+        angular.forEach($scope.proposers, function(person) {
           person.addrCity = $scope.districts[cityname];
         });
       }
@@ -75,7 +75,7 @@ appyApp.controller('FormCtrl', function($scope, $http, $q, $window, $location) {
   };
 
   $scope.hasFormData = function() {
-    return FormData ? true : false;
+    return window.FormData !== undefined ? true : false;
   };
 
   if (!$scope.hasFormData()) {
