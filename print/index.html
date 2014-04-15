@@ -171,8 +171,8 @@
       </div>
       <div class="modal-body">
         <div class="text-center submit">
-          <button ng-class="{'hidden': isIE() }" type="button"
-            class="btn btn-primary" ng-click="sendTo711(proposalForm)">
+          <button type="button"
+            class="btn btn-primary" ng-click="sendTo711(proposalForm)" ng-disabled="!hasFormData()">
             <span class="glyphicon glyphicon-send"></span> 傳送到 7-11 iBon 列印
           </button><br>
           {{modalContent}}
@@ -223,6 +223,30 @@
       <div class="modal-footer">
         <button type="button" class="btn btn-default"
           onclick="$('#legislator-modal').modal('hide');">關閉</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<div id="browser-modal" class="modal fade">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"
+          aria-hidden="true">&times;</button>
+        <h4 class="modal-title">瀏覽器支援警告</h4>
+      </div>
+      <div class="modal-body">
+        您的瀏覽器不支援『傳送至 7-11 ibon 列印』的功能，請升級或安裝最新的瀏覽器：
+        <ul>
+          <li><a href="http://moztw.org/firefox/">Mozilla Firefox</a></li>
+          <li><a href="http://www.google.com/intl/zh-TW/chrome/browser/">Google Chrome</a></li>
+          <li><a href="http://windows.microsoft.com/zh-tw/internet-explorer/download-ie">Microsoft Internet Explorer (版本 >= 10)</a></li>
+        </ul>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default"
+          onclick="$('#browser-modal').modal('hide');">關閉</button>
       </div>
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
