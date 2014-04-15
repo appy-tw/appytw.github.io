@@ -40,9 +40,8 @@ appyApp.controller('FormCtrl', function($scope, $http, $q, $window, $location) {
     $scope.constituency = results[1].data;
     $scope.districtData = results[2].data;
     $scope.districts = results[3].data;
-    var defaultLegislator = $location.path();
-    defaultLegislator = defaultLegislator ? defaultLegislator.substr(1) : '蔡正元';
-    $scope.setLegislator(defaultLegislator);
+    var legislator = $location.path().substr(1);
+    $scope.setLegislator(legislator);
     $scope.initLegislatorFilter();
   });
 
