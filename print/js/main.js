@@ -74,10 +74,13 @@ appyApp.controller('FormCtrl', function($scope, $http, $q, $window, $location) {
     $('#legislator-modal').modal('hide');
   };
 
-  $scope.isIE = function() {
-    var ua = navigator.userAgent.toLowerCase();
-    return /msie/.test(ua) || /Trident/.test(ua);
+  $scope.hasFormData = function() {
+    return FormData ? true : false;
   };
+
+  if (!$scope.hasFormData()) {
+    $('#browser-modal').modal('show');
+  }
 
   $scope.sendToIbon = function(data) {
     var url = 'http://www.ibon.com.tw/0100/file_upload.aspx';
