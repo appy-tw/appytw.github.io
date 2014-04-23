@@ -27,6 +27,11 @@
   height: 400px;
 }
 
+#reasonframe {
+  width: 100%;
+  height: 400px;
+}
+
 .legislator {
   display: inline-block;
   width: 100px;
