@@ -4,7 +4,8 @@ appyApp.config(function($sceDelegateProvider) {
   $sceDelegateProvider.resourceUrlWhitelist([
     'self',
     //'http://www.uisltsc.com.tw/**',
-    'http://ec2-54-254-219-58.ap-southeast-1.compute.amazonaws.com/Appendectomy/**'
+    'http://ec2-54-254-219-58.ap-southeast-1.compute.amazonaws.com/Appendectomy/**', 
+    //'http://localhost/**'
   ]);
 });
 
@@ -27,7 +28,8 @@ appyApp.controller('FormCtrl', function($scope, $http, $q, $window, $location) {
   var titleSending = '傳送到 7-11 ibon';
   var contentPreview = '提議書預覽數秒鐘後將會產生在下面，請使用預覽框內的列印功能列印提議書，或是按上面的按鈕傳送到 ibon 列印';
   var titlePreview = '預覽提議書';
-  var mly = $http.get('data/mly-8.json')
+  var mly = $http.get('data/mly-8.json')  
+  
   var constituency = $http.get('data/constituency.json');
   var districts = $http.get('data/districts.json');
   var options = {
@@ -36,22 +38,41 @@ appyApp.controller('FormCtrl', function($scope, $http, $q, $window, $location) {
   };
 
   $q.all([mly, constituency, districts]).then(function(results) {
-    $scope.mly = results[0].data;
+    $scope.mly = $scope.filterLegislator(results[0].data);
     $scope.constituency = results[1].data;
     $scope.districts = results[2].data;
     var legislator = $location.path().substr(1);
     $scope.setLegislator(legislator);
-    $scope.initLegislatorFilter();
+    
+    if ($scope.selectedTarget == null) {
+		$scope.setLegislator($scope.mly[0].name);
+	}
+    
+    $scope.initLegislatorFilter();    
+    
+    $scope.reasonPage = "dummy.html";  
   });
 
   $scope.count = 1;
   $scope.pdfGeneratorUrl = 'http://ec2-54-254-219-58.ap-southeast-1.compute.amazonaws.com/Appendectomy/appendectomy/proposal.php';
   //$scope.pdfGeneratorUrl = 'http://www.uisltsc.com.tw/appendectomy/proposal.php';
+  //$scope.pdfGeneratorUrl = 'http://localhost/Appendectomy/appendectomy/proposal.php';
 
   var defaultData = {
     birthdayYear: 1992,
     birthdayMonth: 1,
     birthdayDay: 1
+  };
+
+  $scope.filterLegislator = function(ALL_mly) {
+  	var result = [];
+  	var supported = ["蔡正元", "吳育昇", "林鴻池"];
+    angular.forEach(ALL_mly, function(ly) {      
+      if (supported.indexOf(ly.name) > -1) { 
+        result.push(ly);
+      }
+    });
+    return result;
   };
 
   $scope.setLegislator = function(name) {
@@ -126,6 +147,12 @@ appyApp.controller('FormCtrl', function($scope, $http, $q, $window, $location) {
     return result;
   };
 
+  $scope.showReason = function() {
+  	$scope.reasonPage = "doc/" + $scope.selectedTarget.constituency[0] + $scope.selectedTarget.constituency[1]
+    					 + "/reason.html";
+  	$('#reason-modal').modal('show');
+  }
+
   $scope.preview = function() {
     $('#preview-modal').modal('show');
   };
@@ -164,7 +191,7 @@ appyApp.controller('FormCtrl', function($scope, $http, $q, $window, $location) {
   });
 });
 
-function idCheck(id) {
+function idCheck(id) {	
   var idArray=new Array();
   idArray[10]="A";  idArray[11]="B";  idArray[12]="C";  idArray[13]="D";
   idArray[14]="E";  idArray[15]="F";  idArray[16]="G";  idArray[17]="H";
@@ -188,6 +215,7 @@ function idCheck(id) {
     residue=0;
   else
     residue=10-(baseNumber%10);
+    
   if(parseInt(newIdArray.substr(10,1))==residue)
     return true;
   else
