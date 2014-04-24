@@ -53,7 +53,8 @@ appyApp.controller('FormCtrl', function($scope, $http, $q, $window, $location) {
   });
 
   $scope.count = 1;
-  $scope.pdfGeneratorUrl = 'http://ec2-54-254-219-58.ap-southeast-1.compute.amazonaws.com/Appendectomy/appendectomy/proposal.php';
+  //$scope.pdfGeneratorUrl = 'http://ec2-54-254-219-58.ap-southeast-1.compute.amazonaws.com/Appendectomy/appendectomy/proposal.php';
+  $scope.pdfGeneratorUrl = 'http://ec2-54-254-219-58.ap-southeast-1.compute.amazonaws.com/Appendectomy/index.php/GenPDF/proposal';
   //$scope.pdfGeneratorUrl = 'http://www.uisltsc.com.tw/appendectomy/proposal.php';
   //$scope.pdfGeneratorUrl = 'http://localhost/Appendectomy/appendectomy/proposal.php';
 
