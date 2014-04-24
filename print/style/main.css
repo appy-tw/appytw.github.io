@@ -111,6 +111,12 @@ em{
   margin: -30px 15px 30px;
 
 }
+.alert-addrerr{
+  color: #a00000;
+  text-decoration: underline;
+  font-weight:bold;
+}
+
 .has-error .form-control{
   border-color: #ff9a9a;
   border-width: 2px;

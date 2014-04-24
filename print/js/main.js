@@ -28,8 +28,7 @@ appyApp.controller('FormCtrl', function($scope, $http, $q, $window, $location) {
   var titleSending = '傳送到 7-11 ibon';
   var contentPreview = '提議書預覽數秒鐘後將會產生在下面，請使用預覽框內的列印功能列印提議書，或是按上面的按鈕傳送到 ibon 列印';
   var titlePreview = '預覽提議書';
-  var mly = $http.get('data/mly-8.json')  
-  
+  var mly = $http.get('data/mly-8.json');
   var constituency = $http.get('data/constituency.json');
   var districts = $http.get('data/districts.json');
   var options = {
@@ -155,7 +154,6 @@ appyApp.controller('FormCtrl', function($scope, $http, $q, $window, $location) {
 		$scope.reasonPage = "doc/Privacy_Statement/privacy.html";
 	}
     
-    
   	$('#reason-modal').modal('show');
   }    
 
@@ -245,4 +243,76 @@ appyApp.directive('rocid', function($http) {
         });
       }
     };
+});
+
+function AddressCtrl($scope) {
+    this.models = [];    
+}
+
+AddressCtrl.prototype.registerModel = function(model) {
+    this.models.push(model);
+};
+
+AddressCtrl.prototype.checkValidity = function(scope) {			
+	var ly = scope.selectedTarget;
+    var constituency = ly.constituency.join(',');
+    var cityList = scope.constituency[constituency];   
+    var size, cityname;
+    var models = this.models;
+    var ret = false;
+    	
+    return cityList.some(function(city) { 
+        cityname = city.split(',');
+    	size = cityname.length;
+    	
+    	if (size === 1){
+			if (models[0].$viewValue.name === cityname[0])
+				return true;
+		} else if (size === 2){			
+			if ((models[0].$viewValue.name === cityname[0])
+				&& (models[1].$viewValue.name === cityname[1])) {
+				return true;
+			}
+		} else if (size >= 3){
+			if ((models[0].$viewValue.name === cityname[0])
+				&& (models[1].$viewValue.name === cityname[1])
+				&& (models[2].$viewValue.name === cityname[2]))
+				return true;
+		}
+    });    
+};
+
+appyApp.directive("addrSet", function() {
+    return {    
+    	controller: 'AddressCtrl',
+        link: function(scope, elem, attr, ctrl) {
+        }
+    }
+});
+
+appyApp.directive('addrArray', function() {
+    return {
+        require: ['^addrSet', 'ngModel'],
+        link: function(scope, elem, attr, ctrl) {
+        	var addrCtrl = ctrl[0];
+        	var addrSelect = ctrl[1];        	
+        	addrCtrl.registerModel(addrSelect);        	
+        }
+    }
+});
+
+appyApp.directive('addrValidate', function() {
+    return {
+        require: ['^addrSet', 'ngModel'],
+        scope:true,
+        link: function(scope, elem, attr, ctrl) {
+        	var addrCtrl = ctrl[0];
+        	var addrSelect = ctrl[1];
+        	
+            addrSelect.$parsers.push(function(viewValue) {
+                addrSelect.$setValidity("addrValidate", addrCtrl.checkValidity(scope));
+                return viewValue;
+            });
+        }
+    }
 });
