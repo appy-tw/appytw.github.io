@@ -113,21 +113,22 @@
     </div>
     <div class="form-group" ng-class="{ 'has-error': personForm.RegAddVillage.$invalid }">
       <label class="col-sm-2 control-label">戶籍地址</label>
-      <div class="col-sm-10 form-inline">
-        <select ng-model="person.addrCity" class="form-control" name="RegAddCity"
+      <div addr-set class="col-sm-10 form-inline">
+        <select addr-array ng-model="person.addrCity" class="form-control" name="RegAddCity"
           ng-change="person.addrVillage = null; person.addrDistrict = null"
           ng-options="key for (key, value) in districts" required>
           <option value="">縣市</option>
         </select>
-        <select ng-model="person.addrDistrict" class="form-control" name="RegAddDistrict"
+        <select addr-array ng-model="person.addrDistrict" class="form-control" name="RegAddDistrict"
           ng-change="person.addrVillage = null"
           ng-options="key for (key, value) in person.addrCity.contains" required>
           <option value="">區域/鄉鎮</options>
         </select>
-        <select ng-model="person.addrVillage" class="form-control" name="RegAddVillage"
+        <select addr-array addr-validate ng-model="person.addrVillage" class="form-control" name="RegAddVillage"          
           ng-options="key for (key, value) in person.addrDistrict.contains" required>
           <option value="">村里</options>
         </select>
+        <a href="http://www.uisltsc.com.tw/myservant/" target="_blank" class="alert alert-addrerr" ng-show="personForm.RegAddVillage.$error.addrValidate"> 地址錯誤, 點我查詢選區 </a>
       </div>
     </div>
     <div class="form-group">
@@ -143,11 +144,6 @@
           ng-model="person.addrDetail" required placeholder="請填入詳細地址，包含街道與門牌號碼">
       </div>
     </div>
-    <div class="form-group">
-      <div class="col-sm-9 control-label" ng-class="{ 'has-error': personForm.checkbox.$invalid }">
-        <label><input type="checkbox" ng-model="person.privacy" required name="checkbox"> 我已閱讀並同意<a ng-click="showReason('privacy')" href="#">提議人個資法告知事項</a> </label>
-      </div>
-    </div>
     <input type="hidden" name="Name_{{$index}}" value="{{person.name}}">
     <input type="hidden" name="IDNo_{{$index}}" value="{{person.id}}">
     <input type="hidden" name="Occupation_{{$index}}" value="{{person.occupation}}">
@@ -157,10 +153,17 @@
     <input type="hidden" name="Birthday_m_{{$index}}" value="{{person.birthdayMonth}}">
     <input type="hidden" name="Birthday_d_{{$index}}" value="{{person.birthdayDay}}">
   </div>
+    
   <input type="hidden" name="Size" value="{{count}}">
   <input type="hidden" name="constituency"
     value="{{selectedTarget.constituency[0]}},{{selectedTarget.constituency[1]}}">
 
+  <div class="form-group">
+      <div class="col-sm-9 control-label" ng-class="{ 'has-error': personForm.checkbox.$invalid }">
+        <label><input type="checkbox" ng-model="person.privacy" required name="checkbox"> 我已閱讀並同意<a ng-click="showReason('privacy')" href="#">提議人個資法告知事項</a> </label>
+      </div>
+  </div>
+  <br>
   <div class="text-center submit">
     <div ng-class="{ hidden: !proposalForm.$invalid }" class="alert alert-danger">請確認上面標為紅色的欄位均正確填寫，並請確認隱私權聲明。</div>
     <button type="submit" class="btn btn-primary"
