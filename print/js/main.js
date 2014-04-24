@@ -26,7 +26,8 @@ appyApp.filter('district', function() {
 appyApp.controller('FormCtrl', function($scope, $http, $q, $window, $location) {
   var contentSending = '資料傳送到 7-11 ibon 中...';
   var titleSending = '傳送到 7-11 ibon';
-  var contentPreview = '提議書預覽數秒鐘後將會產生在下面，請使用預覽框內的列印功能列印提議書，或是按上面的按鈕傳送到 ibon 列印';
+  var contentPreview = '提議書預覽數秒鐘後將會產生在下面，請使用預覽框內的工具列列印';
+  var contentPreview2 = '小提示: 手機若持續無法顯示請嘗試使用 Chrome 瀏覽';
   var titlePreview = '預覽提議書';
   var mly = $http.get('data/mly-8.json');
   var constituency = $http.get('data/constituency.json');
@@ -132,9 +133,10 @@ appyApp.controller('FormCtrl', function($scope, $http, $q, $window, $location) {
 
   $scope.modalTitle = titlePreview;
   $scope.modalContent = contentPreview;
+  $scope.modalContent2 = contentPreview2;
   $scope.modalHide = function() {
     $('#preview-modal').modal('hide');
-    $scope.modalContent = titleSending;
+    $scope.modalContent = contentPreview;
   };
 
   $scope.proposers = [angular.copy(defaultData)];
