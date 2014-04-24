@@ -61,7 +61,7 @@
       </div>
       <div class="col-sm-2 col-xs-4">
         <button type="button" class="btn btn-default"
-          ng-click="showReason()">罷免理由書</button>
+          ng-click="showReason('reason')">罷免理由書</button>
         
         <!--button type="button" class="btn btn-default"
           onclick="$('#legislator-modal').modal('show');"  style="visibility:hidden">選擇立委</button-->
@@ -143,6 +143,11 @@
           ng-model="person.addrDetail" required placeholder="請填入詳細地址，包含街道與門牌號碼">
       </div>
     </div>
+    <div class="form-group">
+      <div class="col-sm-9 control-label" ng-class="{ 'has-error': personForm.checkbox.$invalid }">
+        <label><input type="checkbox" ng-model="person.privacy" required name="checkbox"> 我已閱讀並同意<a ng-click="showReason('privacy')" href="#">提議人個資法告知事項</a> </label>
+      </div>
+    </div>
     <input type="hidden" name="Name_{{$index}}" value="{{person.name}}">
     <input type="hidden" name="IDNo_{{$index}}" value="{{person.id}}">
     <input type="hidden" name="Occupation_{{$index}}" value="{{person.occupation}}">
@@ -157,7 +162,7 @@
     value="{{selectedTarget.constituency[0]}},{{selectedTarget.constituency[1]}}">
 
   <div class="text-center submit">
-    <div ng-class="{ hidden: !proposalForm.$invalid }" class="alert alert-danger">請確認上面標為紅色的欄位均已填寫，並且身分證字號無誤。</div>
+    <div ng-class="{ hidden: !proposalForm.$invalid }" class="alert alert-danger">請確認上面標為紅色的欄位均正確填寫，並請確認隱私權聲明。</div>
     <button type="submit" class="btn btn-primary"
       ng-disabled="proposalForm.$invalid"
       ng-click="preview(proposalForm)">

@@ -147,11 +147,17 @@ appyApp.controller('FormCtrl', function($scope, $http, $q, $window, $location) {
     return result;
   };
 
-  $scope.showReason = function() {
-  	$scope.reasonPage = "doc/" + $scope.selectedTarget.constituency[0] + $scope.selectedTarget.constituency[1]
-    					 + "/reason.html";
+  $scope.showReason = function(opt) {
+  	if (opt == 'reason') {		
+  		$scope.reasonPage = "doc/" + $scope.selectedTarget.constituency[0] + $scope.selectedTarget.constituency[1]
+    					 	+ "/reason.html";
+    } else if (opt == 'privacy') {
+		$scope.reasonPage = "doc/Privacy_Statement/privacy.html";
+	}
+    
+    
   	$('#reason-modal').modal('show');
-  }
+  }    
 
   $scope.preview = function() {
     $('#preview-modal').modal('show');
