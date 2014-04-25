@@ -116,6 +116,9 @@ em{
   text-decoration: underline;
   font-weight:bold;
 }
+.alert-note{
+  color: #a00000;  
+}
 
 .has-error .form-control{
   border-color: #ff9a9a;
