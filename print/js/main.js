@@ -26,7 +26,7 @@ appyApp.filter('district', function() {
 appyApp.controller('FormCtrl', function($scope, $http, $q, $window, $location) {
   var contentSending = '資料傳送到 7-11 ibon 中...';
   var titleSending = '傳送到 7-11 ibon';
-  var contentPreview = '提議書預覽數秒鐘後將會產生在下面，請使用預覽框內的工具列列印';
+  var contentPreview = '提議書預覽數秒鐘後將會產生在下方';
   var contentPreview2 = '小提示: 手機若持續無法顯示請嘗試使用 Chrome 瀏覽';
   var titlePreview = '預覽提議書';
   var mly = $http.get('data/mly-8.json');
@@ -60,7 +60,7 @@ appyApp.controller('FormCtrl', function($scope, $http, $q, $window, $location) {
   //$scope.pdfGeneratorUrl = 'http://localhost/Appendectomy/appendectomy/proposal.php';
 
   var defaultData = {
-    birthdayYear: 1992,
+    birthdayYear: 1994,
     birthdayMonth: 1,
     birthdayDay: 1
   };
@@ -206,7 +206,8 @@ function idCheck(id) {
   idArray[21]="M";  idArray[22]="N";  idArray[35]="O";  idArray[23]="P";
   idArray[24]="Q";  idArray[25]="R";  idArray[26]="S";  idArray[27]="T";
   idArray[28]="U";  idArray[29]="V";  idArray[30]="X";  idArray[31]="Y";
-  var newIdArray=idArray.indexOf(id.toUpperCase().substr(0,1))+id.substr(1,9);
+  var newIdArray=idArray.indexOf(id.toUpperCase().substr(0,1))+id.substr(1,9);  
+  
   var baseNumber=
     parseInt(newIdArray.substr(0,1))*1+
     parseInt(newIdArray.substr(1,1))*9+
@@ -226,7 +227,7 @@ function idCheck(id) {
   if(parseInt(newIdArray.substr(10,1))==residue)
     return true;
   else
-    return false;
+    return false;    
 }
 
 appyApp.directive('rocid', function($http) {
