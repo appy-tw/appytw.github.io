@@ -28,8 +28,9 @@
     <img src="../assets/images/logo-b.png">
   </div>
   <h1 class="text-center">填寫提案表單</h1>
-  <p class="intro"> 罷免程序分為 提議階段 - 2% 提議人 以及 連署階段 - 13% 連署人, 系統將依目前階段自動生成文件 </p>
-  <em class="text-center">*以下欄位均為必填</em>
+  <p class="text-center"> 罷免程序分為 提議階段 - 2% 提議人 以及 連署階段 - 13% 連署人 <br>系統將依目前階段自動生成文件 </p>
+  <em class="text-center" style=><b>以下欄位均為必填</b></em>
+
 <form id="proposalForm" class="form-horizontal" role="form"
   action="{{ pdfGeneratorUrl }}"
   method="post" target="pdfframe" name="proposalForm">
@@ -73,13 +74,13 @@
       <div ng-class="{ 'has-error':  personForm.Name.$invalid }">
         <label class="col-sm-2 control-label">姓名</label>
         <div class="col-sm-4">
-          <input type="text" ng-model="person.name" class="form-control" name="Name" required>
+          <input type="text" ng-model="person.name" class="form-control" name="Name" required placeholder="需與身分證相同">
         </div>
       </div>
       <div ng-class="{ 'has-error': personForm.IDNo.$invalid }">
         <label class="col-sm-2 control-label">身分證字號</label>
         <div class="col-sm-4">
-          <input type="text" rocid ng-model="person.id" class="form-control" name="IDNo" maxlength="10" required>
+          <input type="text" rocid ng-model="person.id" class="form-control" name="IDNo" maxlength="10" required placeholder="需與身分證相同 (半形英數字)">
         </div>
       </div>
     </div>
@@ -98,7 +99,7 @@
       <label class="col-sm-2 control-label">生日</label>
       <div class="col-sm-4">
         <select ng-model="person.birthdayYear"
-          ng-options="n.value as n.content for n in range(1895,1992)"></select>
+          ng-options="n.value as n.content for n in range(1895,1994)"></select>
         <select ng-model="person.birthdayMonth"
           ng-options="n.value as n.content for n in range(1,12)"></select>
         <select ng-model="person.birthdayDay"
@@ -128,7 +129,7 @@
           ng-options="key for (key, value) in person.addrDistrict.contains" required>
           <option value="">村里</options>
         </select>
-        <a href="http://www.uisltsc.com.tw/myservant/" target="_blank" class="alert alert-addrerr" ng-show="personForm.RegAddVillage.$error.addrValidate"> 地址錯誤, 點我查詢選區 </a>
+        <a href="http://www.uisltsc.com.tw/myservant/" target="_blank" class="alert alert-addrerr" ng-show="personForm.RegAddVillage.$error.addrValidate"> 選區不符，點我查詢選區 </a>
       </div>
     </div>
     <div class="form-group">
@@ -141,9 +142,11 @@
       </div>
       <div class="col-sm-7" ng-class="{ 'has-error': personForm.RegAddDetailAddress.$invalid }">
         <input type="text" class="form-control" name="RegAddDetailAddress"
-          ng-model="person.addrDetail" required placeholder="請填入詳細地址，包含街道與門牌號碼">
+          ng-model="person.addrDetail" required placeholder="請依身分證填入詳細地址，包含街道與門牌號碼">
       </div>
+      <br> <p align="right" class="alert alert-note"> *小提示: 需年滿二十歲, 設籍滿四個月才具有提議/連署資格 </p>
     </div>
+   
     <input type="hidden" name="Name_{{$index}}" value="{{person.name}}">
     <input type="hidden" name="IDNo_{{$index}}" value="{{person.id}}">
     <input type="hidden" name="Occupation_{{$index}}" value="{{person.occupation}}">
