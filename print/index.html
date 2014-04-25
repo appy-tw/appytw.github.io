@@ -141,7 +141,11 @@
       </div>
       <div class="col-sm-7" ng-class="{ 'has-error': personForm.RegAddDetailAddress.$invalid }">
         <input type="text" class="form-control" name="RegAddDetailAddress"
-          ng-model="person.addrDetail" required placeholder="請填入詳細地址，包含街道與門牌號碼">
+          ng-model="person.addrDetail" required>
+        <div class="alert alert-warning">
+          <span class="glyphicon glyphicon-info-sign"></span>
+          請填入詳細地址，包含街道與門牌號碼
+        </div>
       </div>
     </div>
     <input type="hidden" name="Name_{{$index}}" value="{{person.name}}">
