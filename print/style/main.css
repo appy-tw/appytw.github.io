@@ -19,6 +19,7 @@
 }
 
 .submit {
+  font-size: 16px;	
   padding: 10px;
 }
 
@@ -51,7 +52,9 @@ body{
   background: #222 url(/assets/images/dirt.png) repeat
 }
 .main.container{
-  background-color: #fafafa;
+  background-color: white;
+  background-image: url(test.png);
+  background-repeat:no-repeat;background-position:center; 
   padding: 0 0 30px;
   border-top: 8px solid #fa0;
   margin-top: 0px;

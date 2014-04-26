@@ -24,11 +24,12 @@ appyApp.filter('district', function() {
 })
 
 appyApp.controller('FormCtrl', function($scope, $http, $q, $window, $location) {
-  var contentSending = '資料傳送到 7-11 ibon 中...';
+  var buttonTipSending = '資料傳送到 7-11 ibon 中...';
   var titleSending = '傳送到 7-11 ibon';
   var contentPreview = '提議書預覽數秒鐘後將會產生在下方';
   var contentPreview2 = '小提示: 手機若持續無法顯示請嘗試使用 Chrome 瀏覽';
   var titlePreview = '預覽提議書';
+  var ibonPreview = '傳送到 7-11 iBon 列印';
   var mly = $http.get('data/mly-8.json');
   var constituency = $http.get('data/constituency.json');
   var districts = $http.get('data/districts.json');
@@ -67,13 +68,19 @@ appyApp.controller('FormCtrl', function($scope, $http, $q, $window, $location) {
 
   $scope.filterLegislator = function(ALL_mly) {
   	var result = [];
-  	var supported = ["蔡正元", "吳育昇", "林鴻池"];
+  	/*var supported = ["蔡正元", "吳育昇", "林鴻池"];
     angular.forEach(ALL_mly, function(ly) {      
       if (supported.indexOf(ly.name) > -1) { 
         result.push(ly);
       }
     });
-    return result;
+    return result;*/
+    angular.forEach(ALL_mly, function(ly) {
+    	if (ly.constituency.length > 1) {
+			result.push(ly);
+		}
+	});
+	return result;
   };
 
   $scope.setLegislator = function(name) {
@@ -114,13 +121,14 @@ appyApp.controller('FormCtrl', function($scope, $http, $q, $window, $location) {
 
     var second = $http.post(url, uploadData, options);
     second.error(function(data, status, headers, config) {
-      $scope.modalContent = '傳送完成！請到你的信箱獲得 ibon 下載編號';
+      $scope.ibonButtonTip = '傳送完成！請到你的信箱獲得 ibon 下載編號';
+      $scope.showLink = true;
     });
   };
 
   $scope.sendTo711 = function() {
     $scope.modalTitle = titleSending;
-    $scope.modalContent = contentSending;
+    $scope.ibonButtonTip = buttonTipSending;        
 
     var form = new FormData(document.getElementById('proposalForm'));
     $http.post($scope.pdfGeneratorUrl, form, options).success(function(data) {
@@ -131,12 +139,26 @@ appyApp.controller('FormCtrl', function($scope, $http, $q, $window, $location) {
     });
   };
 
+  $scope.ibonButtonTip = ibonPreview;
   $scope.modalTitle = titlePreview;
   $scope.modalContent = contentPreview;
   $scope.modalContent2 = contentPreview2;
+  $scope.showLink = false;
+  
+  $scope.initPreview = function() {
+  	$scope.showLink = false;
+  	$scope.ibonButtonTip = ibonPreview;
+  	$scope.modalTitle = titlePreview;
+  	$scope.modalContent = contentPreview;  	
+  }
+  
   $scope.modalHide = function() {
     $('#preview-modal').modal('hide');
-    $scope.modalContent = contentPreview;
+  };
+  
+  $scope.preview = function() {
+  	$scope.initPreview();
+    $('#preview-modal').modal('show');
   };
 
   $scope.proposers = [angular.copy(defaultData)];
@@ -159,10 +181,6 @@ appyApp.controller('FormCtrl', function($scope, $http, $q, $window, $location) {
     
   	$('#reason-modal').modal('show');
   }    
-
-  $scope.preview = function() {
-    $('#preview-modal').modal('show');
-  };
 
   $scope.initLegislatorFilter = function() {
     $scope.$watch('selectedCity', function(newValue, oldValue) {
