@@ -61,12 +61,13 @@
         <p class="text-center form-control-static">{{selectedTarget.name}}</p>
       </div>
       <div class="col-sm-2 col-xs-4">
-        <button type="button" class="btn btn-default"
-          ng-click="showReason('reason')">罷免理由書</button>
-        
         <!--button type="button" class="btn btn-default"
-          onclick="$('#legislator-modal').modal('show');"  style="visibility:hidden">選擇立委</button-->
+          ng-click="showReason('reason')">罷免理由書</button-->
+        
+        <button type="button" class="btn btn-default"
+          onclick="$('#legislator-modal').modal('show');" >選擇立委</button>
         </div>
+        
     </div>
   </div>
   <div ng-form="personForm" class="section" ng-repeat="person in proposers" ng-class-even="'even'">
@@ -129,7 +130,7 @@
           ng-options="key for (key, value) in person.addrDistrict.contains" required>
           <option value="">村里</options>
         </select>
-        <a href="http://www.uisltsc.com.tw/myservant/" target="_blank" class="alert alert-addrerr" ng-show="personForm.RegAddVillage.$error.addrValidate"> 選區不符，點我查詢選區 </a>
+        <a href="http://www.uisltsc.com.tw/myservant/" target="_blank" class="alert alert-addrerr" ng-show="personForm.RegAddVillage.$error.addrValidate"> 選區不符，點我查詢選區 </a>        
       </div>
     </div>
     <div class="form-group">
@@ -199,13 +200,13 @@
         <h4 class="modal-title">{{modalTitle}}</h4>
       </div>
       <div class="modal-body">
-        <div class="text-center submit">          
+        <div class="text-center submit">
           {{modalContent}}
           <br>
-          <b class="alert alert-note">請將滑鼠移到文件內</b>使用預覽框內的工具列進行列印
+          <b class="alert alert-note">請將滑鼠移到文件內 使用預覽框內的工具列進行列印</b>
           <br>
-          您也可以存檔後-><a href="http://www.ibon.com.tw/0100/file_upload.aspx" target="_blank"> 使用 ibon 雲端列印 </a>
-          <br><br>          
+          或點選下方按鈕將文件傳送到 ibon 
+		  <br><br>
           {{modalContent2}}
         </div>
         <iframe id="pdfframe" name="pdfframe" src="dummy.html" scrolling="auto">
@@ -213,6 +214,15 @@
         </iframe>
       </div>
       <div class="modal-footer">
+      	<div class="text-center submit">
+	      	<button type="button"
+	           class="btn btn-primary" ng-click="sendTo711(proposalForm)" ng-disabled="!hasFormData()">
+	           <span class="glyphicon glyphicon-send"></span> {{ibonButtonTip}}
+	        </button>
+	        <div ng-show="showLink == true">
+	             沒收到編號? 請將檔案存檔-> <a href="http://www.ibon.com.tw/0100/file_upload.aspx" target="_blank">直接使用 ibon 雲端列印</a>
+	        </div>
+	    </div>
         <button type="button" class="btn btn-default" ng-click="modalHide()">關閉</button>
       </div>
     </div><!-- /.modal-content -->
