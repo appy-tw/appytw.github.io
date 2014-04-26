@@ -5,7 +5,7 @@ appyApp.config(function($sceDelegateProvider) {
     'self',
     //'http://www.uisltsc.com.tw/**',
     'http://ec2-54-254-219-58.ap-southeast-1.compute.amazonaws.com/Appendectomy/**', 
-    //'http://localhost/**'
+    'http://localhost/**'
   ]);
 });
 
@@ -58,7 +58,7 @@ appyApp.controller('FormCtrl', function($scope, $http, $q, $window, $location) {
   //$scope.pdfGeneratorUrl = 'http://ec2-54-254-219-58.ap-southeast-1.compute.amazonaws.com/Appendectomy/appendectomy/proposal.php';
   $scope.pdfGeneratorUrl = 'http://ec2-54-254-219-58.ap-southeast-1.compute.amazonaws.com/Appendectomy/index.php/GenPDF/proposal';
   //$scope.pdfGeneratorUrl = 'http://www.uisltsc.com.tw/appendectomy/proposal.php';
-  //$scope.pdfGeneratorUrl = 'http://localhost/Appendectomy/appendectomy/proposal.php';
+  //$scope.pdfGneratorUrl = 'http://localhost/Appendectomy/index.php/GenPDF/proposal';
 
   var defaultData = {
     birthdayYear: 1994,
