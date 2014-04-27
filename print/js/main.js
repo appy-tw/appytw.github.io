@@ -92,6 +92,8 @@ appyApp.controller('FormCtrl', function($scope, $http, $q, $window, $location) {
         cityname = $scope.constituency[constituency][0].split(',')[0];
         angular.forEach($scope.proposers, function(person) {
           person.addrCity = $scope.districts[cityname];
+          person.addrDistrict = null;
+          person.addrVillage = null;
         });
       }
     });
