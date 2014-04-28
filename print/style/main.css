@@ -53,8 +53,8 @@ body{
 }
 .main.container{
   background-color: white;
-  background-image: url(test.png);
-  background-repeat:no-repeat;background-position:center; 
+  /*background-image: url(test.png);
+  background-repeat:no-repeat;background-position:center; */
   padding: 0 0 30px;
   border-top: 8px solid #fa0;
   margin-top: 0px;
@@ -108,18 +108,27 @@ em{
   box-shadow: none;
   border: none;
   border-radius: 0;
+  font-weight: bold;
   -webkit-border-radius: 0;
   -moz-border-radius: 0;
   background: #ffe3e3;
-  margin: -30px 15px 30px;
-
+  margin: 0px 15px 30px;
 }
+
+.form-group-privacy{
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  background: #ffe3e3;
+  margin: -40px 15px 30px;
+}
+
 .alert-addrerr{
   color: #a00000;
   text-decoration: underline;
   font-weight:bold;
 }
 .alert-note{
+  font-size: 14px;
   color: #a00000;  
 }
 

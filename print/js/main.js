@@ -5,7 +5,7 @@ appyApp.config(function($sceDelegateProvider) {
     'self',
     //'http://www.uisltsc.com.tw/**',
     'http://ec2-54-254-219-58.ap-southeast-1.compute.amazonaws.com/Appendectomy/**', 
-    'http://localhost/**'
+    //'http://localhost/**'
   ]);
 });
 
@@ -61,26 +61,26 @@ appyApp.controller('FormCtrl', function($scope, $http, $q, $window, $location) {
   //$scope.pdfGneratorUrl = 'http://localhost/Appendectomy/index.php/GenPDF/proposal';
 
   var defaultData = {
-    birthdayYear: 1985,
-    birthdayMonth: 3,
-    birthdayDay: 18
+    birthdayYear: null,
+    birthdayMonth: null,
+    birthdayDay: null
   };
 
   $scope.filterLegislator = function(ALL_mly) {
   	var result = [];
-  	/*var supported = ["蔡正元", "吳育昇", "林鴻池"];
+  	var supported = ["蔡正元", "吳育昇", "林鴻池"];
     angular.forEach(ALL_mly, function(ly) {      
       if (supported.indexOf(ly.name) > -1) { 
         result.push(ly);
       }
     });
-    return result;*/
-    angular.forEach(ALL_mly, function(ly) {
+    return result;
+    /*angular.forEach(ALL_mly, function(ly) {
     	if (ly.constituency.length > 1) {
 			result.push(ly);
 		}
 	});
-	return result;
+	return result;*/
   };
 
   $scope.setLegislator = function(name) {
