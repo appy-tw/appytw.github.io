@@ -188,7 +188,23 @@
 	    </div>
 	    <p align="right" class="alert alert-note"> *幫忙找到更多認同我們的朋友, 記得請他在推薦人填上你的電子信箱 
 	    </p>
+	    <label for="inputCount" class="col-sm-2 col-xs-12 control-label">我要認領</label>
+      <div class="col-sm-2 col-xs-8">
+        <input type="number" readonly ng-model="count2" class="form-control" id="inputCount">
+      </div>
+      <div class="btn-group col-sm-2 col-xs-4">
+        <button type="button" class="btn btn-default"
+          ng-click="count2 = count2 + 1">
+          <span class="glyphicon glyphicon-plus"></span>
+        </button>
+        <button type="button" class="btn btn-default"
+          ng-click="count2 = (count2 === 1 ? 1 : count2 - 1) ">
+          <span class="glyphicon glyphicon-minus"></span>
+        </button>
+      </div>
+      <br>
     </div>
+    
     
     <button type="submit" class="btn btn-primary"
       ng-disabled="proposalForm.$invalid"
