@@ -61,9 +61,9 @@ appyApp.controller('FormCtrl', function($scope, $http, $q, $window, $location) {
   //$scope.pdfGneratorUrl = 'http://localhost/Appendectomy/index.php/GenPDF/proposal';
 
   var defaultData = {
-    birthdayYear: 1994,
-    birthdayMonth: 1,
-    birthdayDay: 1
+    birthdayYear: 1985,
+    birthdayMonth: 3,
+    birthdayDay: 18
   };
 
   $scope.filterLegislator = function(ALL_mly) {
@@ -146,6 +146,7 @@ appyApp.controller('FormCtrl', function($scope, $http, $q, $window, $location) {
   $scope.modalContent = contentPreview;
   $scope.modalContent2 = contentPreview2;
   $scope.showLink = false;
+  $scope.showPrivacy = false;
   
   $scope.initPreview = function() {
   	$scope.showLink = false;
@@ -173,12 +174,19 @@ appyApp.controller('FormCtrl', function($scope, $http, $q, $window, $location) {
     return result;
   };
 
+  $scope.checkPrivacy = function(opt) {
+  	if ($scope.showPrivacy === false) {
+		$scope.showReason('privacy');	
+	}  	
+  }
+
   $scope.showReason = function(opt) {
   	if (opt == 'reason') {		
   		$scope.reasonPage = "doc/" + $scope.selectedTarget.constituency[0] + $scope.selectedTarget.constituency[1]
     					 	+ "/reason.html";
     } else if (opt == 'privacy') {
 		$scope.reasonPage = "doc/Privacy_Statement/privacy.html";
+		$scope.showPrivacy = true;
 	}
     
   	$('#reason-modal').modal('show');
