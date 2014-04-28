@@ -61,11 +61,11 @@
         <p class="text-center form-control-static">{{selectedTarget.name}}</p>
       </div>
       <div class="col-sm-2 col-xs-4">
-        <!--button type="button" class="btn btn-default"
-          ng-click="showReason('reason')">罷免理由書</button-->
-        
         <button type="button" class="btn btn-default"
-          onclick="$('#legislator-modal').modal('show');" >選擇立委</button>
+          ng-click="showReason('reason')">罷免理由書</button>
+        
+        <!--button type="button" class="btn btn-default"
+          onclick="$('#legislator-modal').modal('show');" >選擇立委</button-->
         </div>
         
     </div>
@@ -86,25 +86,30 @@
       </div>
     </div>
     <div class="form-group">
-      <div class="col-sm-2 control-label">性別</div>
-      <div class="col-sm-3">
-        <label class="radio-inline">
-          <input type="radio" name="Sex_{{$index}}" value="M" checked>
-          男
-        </label>
-        <label class="radio-inline">
-          <input type="radio" name="Sex_{{$index}}" value="F">
-          女
-        </label>
+      <div ng-class="{ 'has-error':personForm.personSex.$invalid }">
+      	<label class="col-sm-2 control-label">性別</label>
+      	<div class="col-sm-3">
+	        <label class="radio-inline">
+          	<input type="radio" name="personSex" ng-model="person.sex" value="M" required>
+          	男
+        	</label>
+        	<label class="radio-inline">
+          	<input type="radio" name="personSex" ng-model="person.sex" value="F" required>
+          	女
+        	</label>
+      	</div>
       </div>
-      <label class="col-sm-2 control-label">生日</label>
-      <div class="col-sm-5 form-inline">
-        <select ng-model="person.birthdayYear" class="form-control"
-          ng-options="n.value as n.content for n in range(1895,1994)"></select>
-        <select ng-model="person.birthdayMonth" class="form-control"
-          ng-options="n.value as n.content for n in range(1,(person.birthdayYear==1994)?6:12)"></select>
-        <select ng-model="person.birthdayDay" class="form-control"
-          ng-options="n.value as n.content for n in range(1,31)"></select>
+      <div ng-class="{ 'has-error': 
+         (personForm.BdayYear.$invalid || personForm.BdayMonth.$invalid || personForm.BdayDay.$invalid) }">
+      	<label class="col-sm-2 control-label">生日</label>
+      	<div class="col-sm-5 form-inline">
+	        <select ng-model="person.birthdayYear" class="form-control" name="BdayYear"
+          	ng-options="n.value as n.content for n in range(1895,1994)" required></select>
+        	<select ng-model="person.birthdayMonth" class="form-control" name="BdayMonth" 
+          	ng-options="n.value as n.content for n in range(1,(person.birthdayYear==1994)?6:12)" required></select>
+        	<select ng-model="person.birthdayDay" class="form-control" name="BdayDay"
+          	ng-options="n.value as n.content for n in range(1,31)" required></select>
+        </div>
       </div>
       <label class="col-sm-7 control-label"> </label>
       <div class="col-sm-5" align="right"><font class="alert alert-note"> *小提示: 要二十歲才有投票權喔! </font></div>
@@ -158,6 +163,7 @@
     <input type="hidden" name="Birthday_y_{{$index}}" value="{{person.birthdayYear}}">
     <input type="hidden" name="Birthday_m_{{$index}}" value="{{person.birthdayMonth}}">
     <input type="hidden" name="Birthday_d_{{$index}}" value="{{person.birthdayDay}}">
+    <input type="hidden" name="Sex_{{$index}}" value="{{person.sex}}">
   </div>
     
   <input type="hidden" name="Size" value="{{count}}">
@@ -166,14 +172,24 @@
   <input type="hidden" name="constituency"
     value="{{selectedTarget.constituency[0]}},{{selectedTarget.constituency[1]}}">
 
-  <div class="form-group">
+  <div class="form-group-privacy">
       <div class="col-sm-9 control-label" ng-class="{ 'has-error': personForm.checkbox.$invalid }">
-        <label><input type="checkbox" ng-model="person.privacy" ng-change="checkPrivacy()" required name="checkbox"> 我已閱讀並同意<a ng-click="showReason('privacy')" href="#">提議人個資法告知事項</a> </label>
+        <label><input type="checkbox" class="alert alert-privacy" ng-model="person.privacy" ng-change="checkPrivacy()" required name="checkbox"> 我已閱讀並同意<a ng-click="showReason('privacy')" href="#">提議人個資法告知事項</a> </label>
       </div>
   </div>
-  <br>
+  
   <div class="text-center submit">
     <div ng-class="{ hidden: !proposalForm.$invalid }" class="alert alert-danger">請確認上面標為紅色的欄位均正確填寫，並請確認隱私權聲明。</div>
+    
+    <div class="form-group" ng-class="{ hidden: proposalForm.$invalid }">
+	    <label for="inputEmail" class="col-sm-2 control-label">推薦人信箱</label>
+	  	<div class="col-sm-10">
+	    	<input name="Referral" class="form-control" placeholder="請輸入推薦人的電子郵件信箱, 幫助他進入英雄榜!">
+	    </div>
+	    <p align="right" class="alert alert-note"> *幫忙找到更多認同我們的朋友, 記得請他在推薦人填上你的電子信箱 
+	    </p>
+    </div>
+    
     <button type="submit" class="btn btn-primary"
       ng-disabled="proposalForm.$invalid"
       ng-click="preview(proposalForm)">
