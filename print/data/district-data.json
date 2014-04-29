@@ -452,7 +452,8 @@
     "reason": null,
     "notice": null,
     "others": null,
-    "logo_image": null
+    "logo_image": null,
+    "website": "https://twly.herokuapp.com/legislator/biller/1322"
   },
   {
     "district_id": "36",
@@ -517,7 +518,8 @@
     "reason": null,
     "notice": null,
     "others": null,
-    "logo_image": null
+    "logo_image": null,
+    "website": "https://twly.herokuapp.com/legislator/biller/1340"
   },
   {
     "district_id": "41",
@@ -881,7 +883,8 @@
     "reason": null,
     "notice": null,
     "others": null,
-    "logo_image": null
+    "logo_image": null,
+    "website": "https://twly.herokuapp.com/legislator/biller/966"
   },
   {
     "district_id": "69",

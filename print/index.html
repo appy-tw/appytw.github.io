@@ -14,6 +14,7 @@
   <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
   <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.1.5/angular-sanitize.js"></script>
   <script src="js/main.js"></script>
 </head>
 <body>
@@ -24,16 +25,29 @@
   </div>
 </div>
 <div class="container main" ng-controller="FormCtrl">
-  <div class="dec">
-    <img src="../assets/images/logo-b.png">
-  </div>
-  <h1 class="text-center">填寫提案表單</h1>
-  <p class="text-center"> 罷免程序分為 提議階段 - 2% 提議人 以及 連署階段 - 13% 連署人 <br>系統將依目前階段自動生成文件 </p>
-  <em class="text-center" style=><b>以下欄位均為必填</b></em>
 
+<div id="reasonPage" class="reasonPage" style="display: none">
+	<h1 class="text-center"><i> {{selectedTarget.name}}</i> 罷免理由書 </h1>
+	<a href ="#" ng-click="showProposal()"><img class="gogo" src="../assets/images/ma.png"></a>
+	<p class="text-center"> <b>選區:</b> {{selectTargetInfo.district_name}} </p>
+	<p class="text-center"> <b>政黨:</b> {{selectTargetInfo.party_name}} </p>
+	<p class="text-center"> <a href="{{selectTargetInfo.website}}" target="_blank"> >>> 投票紀錄 <<< </a> </p>
+	<div class="innerReason" ng-bind-html="myHTML"></div>
+	<a href ="#" ng-click="showProposal()"><img class="gogo-bottom" src="../assets/images/ma.png"></a>
+</div>
+
+<div id="proposalPage" >
+<div class="dec">
+  <img src="../assets/images/logo-b.png">
+</div>
 <form id="proposalForm" class="form-horizontal" role="form"
   action="{{ pdfGeneratorUrl }}"
   method="post" target="pdfframe" name="proposalForm">
+     
+  <h1 class="text-center">填寫提案表單</h1>
+  <p class="text-center"> 罷免程序分為 提議階段 - 2% 提議人 以及 連署階段 - 13% 連署人 <br>系統將依目前階段自動生成文件 </p>    
+  <em class="text-center" style=><b>以下欄位均為必填</b></em>
+  
   <div class="main-section section">
     <div class="form-group" ng-class="{'has-error': proposalForm.EMAIL.$invalid}">
       <label for="inputEmail" class="col-sm-2 control-label">電子信箱</label>
@@ -62,7 +76,7 @@
       </div>
       <div class="col-sm-2 col-xs-4">
         <button type="button" class="btn btn-default"
-          ng-click="showReason('reason')">罷免理由書</button>
+          ng-click="showReason()">罷免理由書</button>
         
         <!--button type="button" class="btn btn-default"
           onclick="$('#legislator-modal').modal('show');" >選擇立委</button-->
@@ -174,7 +188,7 @@
 
   <div class="form-group-privacy">
       <div class="col-sm-9 control-label" ng-class="{ 'has-error': personForm.checkbox.$invalid }">
-        <label><input type="checkbox" class="alert alert-privacy" ng-model="person.privacy" ng-change="checkPrivacy()" required name="checkbox"> 我已閱讀並同意<a ng-click="showReason('privacy')" href="#">提議人個資法告知事項</a> </label>
+        <label><input type="checkbox" class="alert alert-privacy" ng-model="person.privacy" ng-change="checkPrivacy()" required name="checkbox"> 我已閱讀並同意<a ng-click="checkPrivacy(true)" href="#">提議人個資法告知事項</a> </label>
       </div>
   </div>
   
@@ -213,16 +227,17 @@
     </button>
   </div>
 </form>
+</div>
 
-<div id="reason-modal" class="modal fade">
+<div id="privacy-modal" class="modal fade">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-body">
-        <iframe id="reasonframe" name="reasonframe" src= {{reasonPage}} scrolling="auto" width="98%" height="100%">
+        <iframe id="privacyframe" src= {{privacyPage}} scrolling="auto" width="98%" height="100%">
         </iframe>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-default" onclick="$('#reason-modal').modal('hide');">關閉</button>
+        <button type="button" class="btn btn-default" onclick="$('#privacy-modal').modal('hide');">{{privacyButtonText}}</button>
       </div>
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->

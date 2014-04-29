@@ -1,4 +1,4 @@
-var appyApp = angular.module('appyApp', []);
+var appyApp = angular.module('appyApp', ['ngSanitize']);
 
 appyApp.config(function($sceDelegateProvider) {
   $sceDelegateProvider.resourceUrlWhitelist([
@@ -33,25 +33,32 @@ appyApp.controller('FormCtrl', function($scope, $http, $q, $window, $location) {
   var mly = $http.get('data/mly-8.json');
   var constituency = $http.get('data/constituency.json');
   var districts = $http.get('data/districts.json');
+  var district_info = $http.get('data/district-data.json');
   var options = {
     headers: { 'Content-Type': undefined },
     transformRequest: function(data) { return data; }
   };
 
-  $q.all([mly, constituency, districts]).then(function(results) {
+  $q.all([mly, constituency, districts, district_info]).then(function(results) {
     $scope.mly = $scope.filterLegislator(results[0].data);
     $scope.constituency = results[1].data;
     $scope.districts = results[2].data;
-    var legislator = $location.path().substr(1);
-    $scope.setLegislator(legislator);
+    $scope.district_info = results[3].data;
+    var legislator = $location.path().substr(1).split('@');
+    
+    $scope.selectedTarget = null;
+    $scope.selectedTargetInfo = null;
+    
+    $scope.setLegislator(legislator[0]);
     
     if ($scope.selectedTarget == null) {
 		$scope.setLegislator($scope.mly[0].name);
 	}
-    
-    $scope.initLegislatorFilter();    
-    
-    $scope.reasonPage = "dummy.html";  
+	    
+    $scope.initLegislatorFilter();   
+    if ((legislator.length > 1) && legislator[1] === 'reason') {
+		$scope.showReason();
+	}    
   });
 
   $scope.count = 1;
@@ -87,6 +94,7 @@ appyApp.controller('FormCtrl', function($scope, $http, $q, $window, $location) {
     angular.forEach($scope.mly, function(ly) {
       var constituency, cityname;
       if (ly.name === name) {
+
         $scope.selectedTarget = ly;
         constituency = ly.constituency.join(',');
         cityname = $scope.constituency[constituency][0].split(',')[0];
@@ -95,9 +103,21 @@ appyApp.controller('FormCtrl', function($scope, $http, $q, $window, $location) {
           person.addrDistrict = null;
           person.addrVillage = null;
         });
+        
+        var reasonPage = "doc/" + $scope.selectedTarget.constituency[0] + $scope.selectedTarget.constituency[1]
+    					 	+ "/reason.html";    					 	
+    	$http.get(reasonPage).then(function(response) {
+    		$scope.myHTML = response.data;
+		});
+				
+		angular.forEach($scope.district_info, function(info) {
+			if (info.district_legislator == name) {
+				$scope.selectTargetInfo = info;
+			}
+		});
       }
     });
-    $('#legislator-modal').modal('hide');
+    $('#legislator-modal').modal('hide');      
   };
 
   $scope.hasFormData = function() {
@@ -147,6 +167,8 @@ appyApp.controller('FormCtrl', function($scope, $http, $q, $window, $location) {
   $scope.modalContent2 = contentPreview2;
   $scope.showLink = false;
   $scope.showPrivacy = false;
+  $scope.privacyPage = "doc/Privacy_Statement/privacy.html";
+  $scope.privacyButtonText = "關閉";
   
   $scope.initPreview = function() {
   	$scope.showLink = false;
@@ -174,23 +196,35 @@ appyApp.controller('FormCtrl', function($scope, $http, $q, $window, $location) {
     return result;
   };
 
-  $scope.checkPrivacy = function(opt) {
-  	if ($scope.showPrivacy === false) {
-		$scope.showReason('privacy');	
-	}  	
-  }
-
-  $scope.showReason = function(opt) {
-  	if (opt == 'reason') {		
-  		$scope.reasonPage = "doc/" + $scope.selectedTarget.constituency[0] + $scope.selectedTarget.constituency[1]
-    					 	+ "/reason.html";
-    } else if (opt == 'privacy') {
-		$scope.reasonPage = "doc/Privacy_Statement/privacy.html";
-		$scope.showPrivacy = true;
+  $scope.checkPrivacy = function(forceShow) {
+  	if (($scope.showPrivacy === true) && (forceShow != true))
+  		return;
+  	
+  	if (forceShow === true) {
+  		$scope.privacyButtonText = "關閉";  		
+	} else {
+		$scope.privacyButtonText = "我已閱讀並同意上列事項";	
 	}
-    
-  	$('#reason-modal').modal('show');
-  }    
+	
+	$scope.showPrivacy = true;
+	$('#privacy-modal').modal('show');
+  }
+  
+  $scope.showProposal = function() {
+  	document.getElementById("proposalPage").style.display="block";
+  	document.getElementById("reasonPage").style.display="none";
+  	$scope.gotoTop();
+  }
+  
+  $scope.showReason = function() {
+  	document.getElementById("proposalPage").style.display="none";
+  	document.getElementById("reasonPage").style.display="block";
+  	$scope.gotoTop();
+  }
+  
+  $scope.gotoTop = function (){
+    $window.scrollTo(0, 0);
+  };
 
   $scope.initLegislatorFilter = function() {
     $scope.$watch('selectedCity', function(newValue, oldValue) {
@@ -348,3 +382,5 @@ appyApp.directive('addrValidate', function() {
         }
     }
 });
+
+
