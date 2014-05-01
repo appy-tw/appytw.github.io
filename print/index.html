@@ -175,6 +175,7 @@
     <input type="hidden" name="RegAdd_{{$index}}"
       value="{{person.addrCity.name}} {{person.addrDistrict.name}} {{person.addrVillage.name}} {{person.addrNeighborhood}}鄰 {{person.addrDetail}}">
     <input type="hidden" name="addPrefix_{{$index}}" value="{{person.addrCity.name}} {{person.addrDistrict.name}} {{person.addrVillage.name}}">
+    <input type="hidden" name="Phone_{{$index}}" value="">
     <input type="hidden" name="Birthday_y_{{$index}}" value="{{person.birthdayYear}}">
     <input type="hidden" name="Birthday_m_{{$index}}" value="{{person.birthdayMonth}}">
     <input type="hidden" name="Birthday_d_{{$index}}" value="{{person.birthdayDay}}">
@@ -196,13 +197,8 @@
   <div class="text-center submit">
     <div ng-class="{ hidden: !proposalForm.$invalid }" class="alert alert-danger">請確認上面標為紅色的欄位均正確填寫，並請確認隱私權聲明。</div>
     
-    <div class="form-group" ng-class="{ hidden: proposalForm.$invalid }">
-	    <label class="col-sm-3 control-label">連絡電話(選填)</label>
-	    	<div class="col-sm-8">
-	    		<input name="Phone_0" class="form-control" placeholder="留下您的連絡方式, 方便我們在需要您連署時通知您">
-	    	</div>
-	    
-	    <!--label for="inputEmail" class="col-sm-2 control-label">推薦人信箱</label>
+    <!--div class="form-group" ng-class="{ hidden: proposalForm.$invalid }">
+	    <label for="inputEmail" class="col-sm-2 control-label">推薦人信箱</label>
 	  	<div class="col-sm-10">
 	    	<input name="Referral" class="form-control" placeholder="請輸入推薦人的電子郵件信箱, 幫助他進入英雄榜!">
 	    </div>
@@ -221,9 +217,9 @@
           ng-click="count2 = (count2 === 1 ? 1 : count2 - 1) ">
           <span class="glyphicon glyphicon-minus"></span>
         </button>
-      </div-->
+      </div>
       <br>
-    </div>
+    </div-->
     
     
     <button type="submit" class="btn btn-primary"
