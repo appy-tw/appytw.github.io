@@ -101,7 +101,9 @@ body{
   margin: 0px auto;
   border-radius: 5px 5px 3px 3px;
   box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.8);
-  padding: 20px 20px 20px 20px
+  padding: 20px 20px 20px 20px;
+  max-height: 400px;
+  overflow:scroll;
 }
 
 .innerReason{
@@ -130,6 +132,7 @@ em{
   font-size: 20px;
   box-sizing: border-box;
   -moz-box-sizing: border-box;
+  margin: 0px, 0px, 25px
 }
 .btn.disabled, .btn[disabled], fieldset[disabled] .btn{
   background: #ccc;
@@ -181,6 +184,10 @@ em{
 .form-control{
   border-width: 2px;
   color: #999;
+}
+
+.info-title{
+  color: #f05555;
 }
 
 .info-label{
