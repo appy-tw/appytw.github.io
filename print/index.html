@@ -42,7 +42,7 @@
 </div>
 <form id="proposalForm" class="form-horizontal" role="form"
   action="{{ pdfGeneratorUrl }}"
-  method="post" target="pdfframe" name="proposalForm">
+  method="post" target="" name="proposalForm">
      
   <h1 class="text-center">罷免提議/連署人名冊</h1>
   <p class="text-center"> 罷免程序分為 提議階段 - 2% 提議人 以及 連署階段 - 13% 連署人 <br>系統將依目前階段自動生成文件 </p>    
@@ -100,18 +100,11 @@
       </div>
     </div>
     <div class="form-group">
-      <div ng-class="{ 'has-error':personForm.personSex.$invalid }">
-      	<label class="col-sm-2 control-label">性別</label>
-      	<div class="col-sm-3">
-	        <label class="radio-inline">
-          	<input type="radio" name="personSex" ng-model="person.sex" value="M" required>
-          	男
-        	</label>
-        	<label class="radio-inline">
-          	<input type="radio" name="personSex" ng-model="person.sex" value="F" required>
-          	女
-        	</label>
-      	</div>
+      <div ng-class="{ 'has-error': personForm.Occupation.$invalid }">
+        <label for="Occupation_{{$index}}" class="col-sm-2 control-label">職業</label>
+        <div class="col-sm-3">
+          <input type="text" ng-model="person.occupation" class="form-control" name="Occupation" placeholder="請勿超過四個字" maxlength="4" required>
+        </div>
       </div>
       <div ng-class="{ 'has-error': 
          (personForm.BdayYear.$invalid || personForm.BdayMonth.$invalid || personForm.BdayDay.$invalid) }">
@@ -125,15 +118,9 @@
           	ng-options="n.value as n.content for n in range(1,31)" required></select>
         </div>
       </div>
-      <label class="col-sm-7 control-label"> </label>
-      <div class="col-sm-5" align="right"><font class="alert alert-note"> *小提示: 要滿二十歲才有投票權喔! </font></div>
+      <div class="col-sm-12" align="right"><font class="alert alert-note"> *小提示: 要滿二十歲才有投票權喔! </font></div>
     </div>
-    <div class="form-group" ng-class="{ 'has-error': personForm.Occupation.$invalid }">
-      <label for="Occupation_{{$index}}" class="col-sm-2 control-label">職業</label>
-      <div class="col-sm-4">
-        <input type="text" ng-model="person.occupation" class="form-control" name="Occupation" placeholder="請勿超過四個字" maxlength="4" required>
-      </div>
-    </div>
+
     <div class="form-group" ng-class="{ 'has-error': personForm.RegAddVillage.$invalid }">
       <label class="col-sm-2 control-label">戶籍地址</label>
       <div addr-set class="col-sm-10 form-inline">
@@ -174,12 +161,11 @@
     <input type="hidden" name="Occupation_{{$index}}" value="{{person.occupation}}">
     <input type="hidden" name="RegAdd_{{$index}}"
       value="{{person.addrCity.name}} {{person.addrDistrict.name}} {{person.addrVillage.name}} {{person.addrNeighborhood}}鄰 {{person.addrDetail}}">
-    <input type="hidden" name="addPrefix_{{$index}}" value="{{person.addrCity.name}} {{person.addrDistrict.name}} {{person.addrVillage.name}}">
-    <input type="hidden" name="Phone_{{$index}}" value="">
+    <input type="hidden" name="addPrefix_{{$index}}" value="{{person.addrCity.name}} {{person.addrDistrict.name}} {{person.addrVillage.name}}">    
     <input type="hidden" name="Birthday_y_{{$index}}" value="{{person.birthdayYear}}">
     <input type="hidden" name="Birthday_m_{{$index}}" value="{{person.birthdayMonth}}">
     <input type="hidden" name="Birthday_d_{{$index}}" value="{{person.birthdayDay}}">
-    <input type="hidden" name="Sex_{{$index}}" value="{{person.sex}}">
+    <input type="hidden" name="Sex_{{$index}}" value="">
   </div>
     
   <input type="hidden" name="Size" value="{{count}}">
@@ -196,6 +182,13 @@
   
   <div class="text-center submit">
     <div ng-class="{ hidden: !proposalForm.$invalid }" class="alert alert-danger">請確認上面標為紅色的欄位均正確填寫，並請確認隱私權聲明。</div>
+    
+    <div class="form-group" ng-class="{ hidden: proposalForm.$invalid }">
+    <label class="col-sm-3 control-label">連絡電話(選填)</label>
+    	<div class="col-sm-8">
+    		<input name="Phone_0" class="form-control" placeholder="留下您的連絡方式, 方便我們在需要您連署時通知您">
+    	</div>
+    </div>
     
     <!--div class="form-group" ng-class="{ hidden: proposalForm.$invalid }">
 	    <label for="inputEmail" class="col-sm-2 control-label">推薦人信箱</label>
@@ -223,7 +216,7 @@
     
     
     <button type="button" class="btn btn-primary"
-
+	  ng-disabled="proposalForm.$invalid"
       ng-click="preview(proposalForm)">
       <span class="glyphicon glyphicon-print"></span> 預覽
     </button>
@@ -261,12 +254,22 @@
       </div>
       <div class="modal-footer">
       	<div class="text-center submit">
+      		<button type="button"
+	           class="btn btn-primary" ng-click="downloadFile(proposalForm)" ng-disabled="!hasFormData()">
+	           {{downloadButtonTip}}
+	        </button>
+	        <br><br>
+	        
+	        <label>
+	        上傳前請<a href="http://www.ibon.com.tw/0100/file_upload.aspx" target="_blank">先至網頁確認</a> ibon 上傳文件服務的申請同意書<br>
+	        <input type="checkbox" ng-model="iboncheck" class="alert alert-privacy" requied> 我已瞭解 ibon 相關服務條款
+	        </label>
 	      	<button type="button"
-	           class="btn btn-primary" ng-click="sendTo711(proposalForm)" ng-disabled="!hasFormData()">
+	           class="btn btn-primary" ng-click="sendTo711(proposalForm)" ng-disabled="!hasFormData() || !iboncheck">
 	           <span class="glyphicon glyphicon-send"></span> {{ibonButtonTip}}
 	        </button>
 	        <div ng-show="showLink == true">
-	             沒收到編號? 請將檔案存檔-> <a href="http://www.ibon.com.tw/0100/file_upload.aspx" target="_blank">直接使用 ibon 雲端列印</a>
+	             沒收到編號? 請下載檔案-> <a href="http://www.ibon.com.tw/0100/file_upload.aspx" target="_blank">直接使用 ibon 雲端列印</a>
 	        </div>
 	    </div>
         <button type="button" class="btn btn-default" ng-click="modalHide()">關閉</button>

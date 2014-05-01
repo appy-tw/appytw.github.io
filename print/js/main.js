@@ -4,7 +4,7 @@ appyApp.config(function($sceDelegateProvider) {
   $sceDelegateProvider.resourceUrlWhitelist([
     'self',
     'http://www.uisltsc.com.tw/**',
-    'https://ec2-54-254-219-58.ap-southeast-1.compute.amazonaws.com/Appendectomy/**', 
+    'https://backend.appy.tw/Appendectomy/**', 
     //'http://localhost/**'
   ]);
 });
@@ -30,6 +30,8 @@ appyApp.controller('FormCtrl', function($scope, $http, $q, $window, $location) {
   var contentPreview2 = '小提示: 手機若持續無法顯示請嘗試使用 Chrome 瀏覽';
   var titlePreview = '確認資料';
   var ibonPreview = '傳送到 7-11 iBon 列印';
+  var downloadPreview = '確認完畢，下載提議書';
+  var downloadDownloading = '資料已送出，若無法下載請檢查瀏覽器設定';
   var mly = $http.get('data/mly-8.json');
   var constituency = $http.get('data/constituency.json');
   var districts = $http.get('data/districts.json');
@@ -63,7 +65,7 @@ appyApp.controller('FormCtrl', function($scope, $http, $q, $window, $location) {
 
   $scope.count = 1;
   //$scope.pdfGeneratorUrl = 'http://ec2-54-254-219-58.ap-southeast-1.compute.amazonaws.com/Appendectomy/appendectomy/proposal.php';
-  $scope.pdfGeneratorUrl = 'https://ec2-54-254-219-58.ap-southeast-1.compute.amazonaws.com/Appendectomy/index.php/GenPDF/proposal';
+  $scope.pdfGeneratorUrl = 'https://backend.appy.tw/Appendectomy/index.php/GenPDF/proposal';
   //$scope.pdfGeneratorUrl = 'http://www.uisltsc.com.tw/appendectomy/proposal.php';
   //$scope.pdfGneratorUrl = 'http://localhost/Appendectomy/index.php/GenPDF/proposal';
 
@@ -148,6 +150,11 @@ appyApp.controller('FormCtrl', function($scope, $http, $q, $window, $location) {
     });
   };
 
+  $scope.downloadFile = function() {
+  	$scope.downloadButtonTip = downloadDownloading;
+  	document.getElementById('proposalForm').submit();
+  }
+
   $scope.sendTo711 = function() {
     $scope.modalTitle = titleSending;
     $scope.ibonButtonTip = buttonTipSending;        
@@ -161,6 +168,7 @@ appyApp.controller('FormCtrl', function($scope, $http, $q, $window, $location) {
     });
   };
 
+  $scope.downloadButtonTip = downloadPreview;
   $scope.ibonButtonTip = ibonPreview;
   $scope.modalTitle = titlePreview;
   $scope.modalContent = contentPreview;
@@ -174,7 +182,8 @@ appyApp.controller('FormCtrl', function($scope, $http, $q, $window, $location) {
   	$scope.showLink = false;
   	$scope.ibonButtonTip = ibonPreview;
   	$scope.modalTitle = titlePreview;
-  	$scope.modalContent = contentPreview;  	
+  	$scope.modalContent = contentPreview;
+  	$scope.downloadButtonTip = downloadPreview;
   }
   
   $scope.modalHide = function() {
@@ -261,22 +270,55 @@ appyApp.controller('FormCtrl', function($scope, $http, $q, $window, $location) {
     }
   });
     
-    $scope.fillInData = function(column, data) {
+    $scope.fillInData = function(column, data, idx) {   
+    	var pData = $scope.proposers[idx];
+    	
+    	column.length = 0;
+    	data.length = 0;
+    	
 		column.push("姓名");
-    	data.push("test");
+    	data.push(pData.name);
+    	
+    	column.push("身分證字號");
+    	data.push(pData.id);
+    	
+    	column.push("性別");
+    	var sex = getID(pData.id).substr(2,1); 
+    	
+    	pData.sex = "M";
+    	if (sex == 2){
+			pData.sex = "F";
+		}
+		document.getElementsByName('Sex_'+idx)[0].value = pData.sex;
+    	data.push((pData.sex=='M')?"男生":"女生");
+    	
+    	column.push("生日");
+    	data.push(pData.birthdayYear + '/' + pData.birthdayMonth + '/' + pData.birthdayDay);
+    	
+    	column.push("職業");
+    	data.push(pData.occupation);
+    	
+    	column.push("戶籍地址");
+    	data.push(pData.addrCity.name + " " 
+    	        + pData.addrDistrict.name + " " 
+    	        + pData.addrVillage.name + " "
+    	        + pData.addrNeighborhood + "鄰 " 
+    	        + pData.addrDetail);
 	}
     
     $scope.drawPreview = function() {
     	var users = $scope.proposers.length;
     	var column = [];
-    	var data = [];
-    	
-    	$scope.fillInData(column, data);
+    	var data = [];    
     	
     	if (users == 0) {
 			$scope.finalCheckHtml = '發生某些錯誤! 請返回上一頁填寫資料';
-		} else {			
-			$scope.finalCheckHtml = '<div class="form-group">';			
+		} else {
+			$scope.finalCheckHtml = '<div class="form-group">';
+			$scope.finalCheckHtml += '<label class="col-sm-9 info-title">表單資料</label>';
+			$scope.finalCheckHtml += '<p class="col-sm-3"> </p>';
+			$scope.finalCheckHtml += '</div>';
+			$scope.finalCheckHtml += '<br><div class="form-group">';
 			$scope.finalCheckHtml += '<label class="col-sm-3 info-label">立委姓名:</label>';
 			$scope.finalCheckHtml += '<p class="col-sm-9">' + $scope.selectedTarget.name + '</p>';
 			$scope.finalCheckHtml += '</div>';
@@ -288,23 +330,36 @@ appyApp.controller('FormCtrl', function($scope, $http, $q, $window, $location) {
 			$scope.finalCheckHtml += '<label class="col-sm-3 info-label"> 數量:</label>';
 			$scope.finalCheckHtml += '<p class="col-sm-9">[' + users + '] 張</p>';
 			$scope.finalCheckHtml += '</div>';
-			$scope.finalCheckHtml += '<div class="form-group"><hr style="border:5px dashed" size="3" width="100%"></div>';
+			$scope.finalCheckHtml += '<div class="form-group">';
+			$scope.finalCheckHtml += '<label class="col-sm-3 info-label"> 電子郵件:</label>';
+			$scope.finalCheckHtml += '<p class="col-sm-9"> ' + document.getElementById("inputEmail").value + '</p>';
+			$scope.finalCheckHtml += '</div>';
+			$scope.finalCheckHtml += '<hr style="border:5px dashed" size="3" width="100%">';
+							
+			var j=0;
+					
+			for (i = 0; i < users; i++) {			
+    			$scope.fillInData(column, data, i);
 			
-			var i=0;
-			for (i = 0; i < data.length; i++) {
 				$scope.finalCheckHtml += '<div class="form-group">';
-				$scope.finalCheckHtml += '<label class="col-sm-3 info-label">';
-				$scope.finalCheckHtml += column[i];
-				$scope.finalCheckHtml += '</label>';
-				$scope.finalCheckHtml += '<p class="col-sm-9">';
-				$scope.finalCheckHtml += data[i];
-				$scope.finalCheckHtml += '</p>';
+				$scope.finalCheckHtml += '<label class="col-sm-9 info-title">使用者資料 - ' + (i+1) + '</label>';
+				$scope.finalCheckHtml += '<p class="col-sm-3"> .</p>';
 				$scope.finalCheckHtml += '</div>';
+				
+				for (j = 0; j < column.length; j++) {
+					$scope.finalCheckHtml += '<div class="form-group">';
+					$scope.finalCheckHtml += '<label class="col-sm-3 info-label">';
+					$scope.finalCheckHtml += column[j];
+					$scope.finalCheckHtml += '</label>';
+					$scope.finalCheckHtml += '<p class="col-sm-9">';
+					$scope.finalCheckHtml += data[j];
+					$scope.finalCheckHtml += '</p>';
+					$scope.finalCheckHtml += '</div>';
+				}
+				$scope.finalCheckHtml += '<hr style="border:5px dashed" size="3" width="100%">';
 			}
-			
-			$scope.finalCheckHtml += '<br> <br>'			
-		}    	
-	}    
+		} 
+	}
     
 	$scope.drawPDF = function() {
 		var canvas = document.getElementById("cnvs");
@@ -333,7 +388,7 @@ appyApp.controller('FormCtrl', function($scope, $http, $q, $window, $location) {
   
 });
 
-function idCheck(id) {	
+function getID(id) {
   var idArray=new Array();
   idArray[10]="A";  idArray[11]="B";  idArray[12]="C";  idArray[13]="D";
   idArray[14]="E";  idArray[15]="F";  idArray[16]="G";  idArray[17]="H";
@@ -341,7 +396,11 @@ function idCheck(id) {
   idArray[21]="M";  idArray[22]="N";  idArray[35]="O";  idArray[23]="P";
   idArray[24]="Q";  idArray[25]="R";  idArray[26]="S";  idArray[27]="T";
   idArray[28]="U";  idArray[29]="V";  idArray[30]="X";  idArray[31]="Y";
-  var newIdArray=idArray.indexOf(id.toUpperCase().substr(0,1))+id.substr(1,9);  
+  return idArray.indexOf(id.toUpperCase().substr(0,1))+id.substr(1,9); 
+}
+
+function idCheck(id) {	
+  var newIdArray= getID(id);
   
   var baseNumber=
     parseInt(newIdArray.substr(0,1))*1+
