@@ -96,6 +96,14 @@ body{
   bottom: 10px;	
 }
 
+.checkDialog{
+  width: 600px;	
+  margin: 0px auto;
+  border-radius: 5px 5px 3px 3px;
+  box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.8);
+  padding: 20px 20px 20px 20px
+}
+
 .innerReason{
   margin: 60px 50px 50px 50px;
 }
@@ -154,6 +162,10 @@ em{
   font-size: 14px;
   color: #a00000;  
 }
+.alert-bold{
+  color: #a00000;
+  font-weight: bold;
+}
 
 .has-error .form-control{
   border-color: #ff9a9a;
@@ -170,6 +182,11 @@ em{
   border-width: 2px;
   color: #999;
 }
+
+.info-label{
+  color: #5555f0;
+}
+
 p.form-control-static{
   color: #2c8ca4;
   font-size: 18px;
