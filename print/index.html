@@ -222,8 +222,8 @@
     </div-->
     
     
-    <button type="submit" class="btn btn-primary"
-      ng-disabled="proposalForm.$invalid"
+    <button type="button" class="btn btn-primary"
+
       ng-click="preview(proposalForm)">
       <span class="glyphicon glyphicon-print"></span> 預覽
     </button>
@@ -254,17 +254,10 @@
       </div>
       <div class="modal-body">
         <div class="text-center submit">
-          {{modalContent}}
-          <br>
-          <b class="alert alert-note">請將滑鼠移到文件內 使用預覽框內的工具列進行列印</b>
-          <br>
-          或點選下方按鈕將文件傳送到 ibon 
-		  <br><br>
-          {{modalContent2}}
-        </div>
-        <iframe id="pdfframe" name="pdfframe" src="dummy.html" scrolling="auto">
-          產生預覽中...
-        </iframe>
+        <span style="vertical-align">
+          <h1 class="alert alert-bold"> {{modalContent}} </h1>
+          <div class="checkDialog" ng-bind-html="finalCheckHtml"></div>
+        </span>
       </div>
       <div class="modal-footer">
       	<div class="text-center submit">

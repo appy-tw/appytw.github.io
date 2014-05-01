@@ -3,8 +3,8 @@ var appyApp = angular.module('appyApp', ['ngSanitize']);
 appyApp.config(function($sceDelegateProvider) {
   $sceDelegateProvider.resourceUrlWhitelist([
     'self',
-    //'http://www.uisltsc.com.tw/**',
-    'http://ec2-54-254-219-58.ap-southeast-1.compute.amazonaws.com/Appendectomy/**', 
+    'http://www.uisltsc.com.tw/**',
+    'https://ec2-54-254-219-58.ap-southeast-1.compute.amazonaws.com/Appendectomy/**', 
     //'http://localhost/**'
   ]);
 });
@@ -26,9 +26,9 @@ appyApp.filter('district', function() {
 appyApp.controller('FormCtrl', function($scope, $http, $q, $window, $location) {
   var buttonTipSending = '資料傳送到 7-11 ibon 中...';
   var titleSending = '傳送到 7-11 ibon';
-  var contentPreview = '提議書預覽數秒鐘後將會產生在下方';
+  var contentPreview = '請確認您的個人資料';
   var contentPreview2 = '小提示: 手機若持續無法顯示請嘗試使用 Chrome 瀏覽';
-  var titlePreview = '預覽提議書';
+  var titlePreview = '確認資料';
   var ibonPreview = '傳送到 7-11 iBon 列印';
   var mly = $http.get('data/mly-8.json');
   var constituency = $http.get('data/constituency.json');
@@ -63,7 +63,7 @@ appyApp.controller('FormCtrl', function($scope, $http, $q, $window, $location) {
 
   $scope.count = 1;
   //$scope.pdfGeneratorUrl = 'http://ec2-54-254-219-58.ap-southeast-1.compute.amazonaws.com/Appendectomy/appendectomy/proposal.php';
-  $scope.pdfGeneratorUrl = 'http://ec2-54-254-219-58.ap-southeast-1.compute.amazonaws.com/Appendectomy/index.php/GenPDF/proposal';
+  $scope.pdfGeneratorUrl = 'https://ec2-54-254-219-58.ap-southeast-1.compute.amazonaws.com/Appendectomy/index.php/GenPDF/proposal';
   //$scope.pdfGeneratorUrl = 'http://www.uisltsc.com.tw/appendectomy/proposal.php';
   //$scope.pdfGneratorUrl = 'http://localhost/Appendectomy/index.php/GenPDF/proposal';
 
@@ -183,6 +183,8 @@ appyApp.controller('FormCtrl', function($scope, $http, $q, $window, $location) {
   
   $scope.preview = function() {
   	$scope.initPreview();
+  	//$scope.drawPDF();
+  	$scope.drawPreview();
     $('#preview-modal').modal('show');
   };
 
@@ -258,6 +260,77 @@ appyApp.controller('FormCtrl', function($scope, $http, $q, $window, $location) {
       }
     }
   });
+    
+    $scope.fillInData = function(column, data) {
+		column.push("姓名");
+    	data.push("test");
+	}
+    
+    $scope.drawPreview = function() {
+    	var users = $scope.proposers.length;
+    	var column = [];
+    	var data = [];
+    	
+    	$scope.fillInData(column, data);
+    	
+    	if (users == 0) {
+			$scope.finalCheckHtml = '發生某些錯誤! 請返回上一頁填寫資料';
+		} else {			
+			$scope.finalCheckHtml = '<div class="form-group">';			
+			$scope.finalCheckHtml += '<label class="col-sm-3 info-label">立委姓名:</label>';
+			$scope.finalCheckHtml += '<p class="col-sm-9">' + $scope.selectedTarget.name + '</p>';
+			$scope.finalCheckHtml += '</div>';
+			$scope.finalCheckHtml += '<div class="form-group">';
+			$scope.finalCheckHtml += '<label class="col-sm-3 info-label">立委選區:</label>';
+			$scope.finalCheckHtml += '<p class="col-sm-9">' + $scope.selectTargetInfo.district_name + '</p>';
+			$scope.finalCheckHtml += '</div>';
+			$scope.finalCheckHtml += '<div class="form-group">';
+			$scope.finalCheckHtml += '<label class="col-sm-3 info-label"> 數量:</label>';
+			$scope.finalCheckHtml += '<p class="col-sm-9">[' + users + '] 張</p>';
+			$scope.finalCheckHtml += '</div>';
+			$scope.finalCheckHtml += '<div class="form-group"><hr style="border:5px dashed" size="3" width="100%"></div>';
+			
+			var i=0;
+			for (i = 0; i < data.length; i++) {
+				$scope.finalCheckHtml += '<div class="form-group">';
+				$scope.finalCheckHtml += '<label class="col-sm-3 info-label">';
+				$scope.finalCheckHtml += column[i];
+				$scope.finalCheckHtml += '</label>';
+				$scope.finalCheckHtml += '<p class="col-sm-9">';
+				$scope.finalCheckHtml += data[i];
+				$scope.finalCheckHtml += '</p>';
+				$scope.finalCheckHtml += '</div>';
+			}
+			
+			$scope.finalCheckHtml += '<br> <br>'			
+		}    	
+	}    
+    
+	$scope.drawPDF = function() {
+		var canvas = document.getElementById("cnvs");
+            //set the height and width of canvas
+            var cw = 10;
+            var ch = 10;
+            var context = canvas.getContext("2d");
+            //change the font of the canvas
+            context.font = "15px Verdana";
+            //change the color to yellow
+            context.fillStyle = "yellow";
+            //draw the background using yellow color
+            context.fillRect(0, 0, 50, 50);
+            //change the brush color to black
+            context.fillStyle = "black";
+            //write text on the canvas
+            alert(context.measureText("12345").width);
+            alert(context.measureText("12345").height);
+            context.fillText("12345", 50, 50);
+            //Get the Data URI of the canvas image
+            var dataURL = canvas.toDataURL("image/png");
+            //assign the data URI to image element
+            document.getElementById("testimg").src = dataURL;
+
+	};
+  
 });
 
 function idCheck(id) {	
