@@ -106,11 +106,13 @@ appyApp.controller('FormCtrl', function($scope, $http, $q, $window, $location) {
           person.addrVillage = null;
         });
         
-        var reasonPage = "doc/" + $scope.selectedTarget.constituency[0] + $scope.selectedTarget.constituency[1]
-    					 	+ "/reason.html";    					 	
+        var cons = $scope.selectedTarget.constituency[0] + $scope.selectedTarget.constituency[1];
+        
+        var reasonPage = "doc/" + cons + "/reason.html";
     	$http.get(reasonPage).then(function(response) {
     		$scope.myHTML = response.data;
 		});
+		$scope.emptyForm = "doc/" + cons + "/proposal_" + cons + ".pdf";  
 				
 		angular.forEach($scope.district_info, function(info) {
 			if (info.district_legislator == name) {
@@ -231,6 +233,9 @@ appyApp.controller('FormCtrl', function($scope, $http, $q, $window, $location) {
   	document.getElementById("proposalPage").style.display="none";
   	document.getElementById("reasonPage").style.display="block";
   	$scope.gotoTop();
+  }
+  $scope.showEmptyForm = function() {
+  	window.open($scope.emptyForm);
   }
   
   $scope.gotoTop = function (){
