@@ -29,9 +29,9 @@ appyApp.controller('FormCtrl', function($scope, $http, $q, $window, $location) {
   var contentPreview = '請確認您的個人資料';
   var contentPreview2 = '小提示: 手機若持續無法顯示請嘗試使用 Chrome 瀏覽';
   var titlePreview = '確認資料';
-  var ibonPreview = '沒有印表機? 試試用 ibon 列印雲端列印';
+  var ibonPreview = 'ibon 列印雲端列印';
   var downloadPreview = '確認完畢，下載提議書';
-  var downloadDownloading = '資料已送出，若無法下載請檢查瀏覽器設定';
+  var downloadDownloading = '下載中....';
   var mly = $http.get('data/mly-8.json');
   var constituency = $http.get('data/constituency.json');
   var districts = $http.get('data/districts.json');
