@@ -56,6 +56,25 @@
       </div>
     </div>
     <div class="form-group">
+          <label for="inputTarget" class="col-sm-2 col-xs-12 control-label">罷免對象</label>
+      <div class="col-sm-2 col-xs-8">
+        <p class="text-center form-control-static">{{selectedTarget.name}}</p>
+      </div>
+      <div class="col-sm-2 col-xs-4">
+        <button type="button" class="btn btn-default"
+          ng-click="showReason()">罷免理由書</button>
+        
+        <!--button type="button" class="btn btn-default"
+          onclick="$('#legislator-modal').modal('show');" >選擇立委</button-->
+        </div>
+        <div class="col-sm-2 col-xs-4">	        
+		        <button type="button" class="btn btn-default"
+		          ng-click="showEmptyForm()">空白提議書</button>	        
+        <!--button type="button" class="btn btn-default"
+          onclick="$('#legislator-modal').modal('show');" >選擇立委</button-->
+        </div>
+    </div>
+    <div class="form-group">
       <label for="inputCount" class="col-sm-2 col-xs-12 control-label">填寫份數</label>
       <div class="col-sm-2 col-xs-8">
         <input type="number" readonly ng-model="count" class="form-control" id="inputCount">
@@ -69,19 +88,7 @@
           ng-click="count = (count === 1 ? 1 : count - 1) ">
           <span class="glyphicon glyphicon-minus"></span>
         </button>
-      </div>
-      <label for="inputTarget" class="col-sm-2 col-xs-12 control-label">罷免對象</label>
-      <div class="col-sm-2 col-xs-8">
-        <p class="text-center form-control-static">{{selectedTarget.name}}</p>
-      </div>
-      <div class="col-sm-2 col-xs-4">
-        <button type="button" class="btn btn-default"
-          ng-click="showReason()">罷免理由書</button>
-        
-        <!--button type="button" class="btn btn-default"
-          onclick="$('#legislator-modal').modal('show');" >選擇立委</button-->
-        </div>
-        
+      </div>        
     </div>
   </div>
   <div ng-form="personForm" class="section" ng-repeat="person in proposers" ng-class-even="'even'">
