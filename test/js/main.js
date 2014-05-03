@@ -193,10 +193,10 @@ appyApp.controller('FormCtrl', function($scope, $http, $q, $window, $location) {
   };
   
   $scope.preview = function() {
-  	$scope.downloadFile();
   	$scope.initPreview();
   	//$scope.drawPDF();
   	$scope.drawPreview();
+  	$scope.downloadFile();
     $('#preview-modal').modal('show');
   };
 
