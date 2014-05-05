@@ -19,7 +19,7 @@
 }
 
 .submit {
-  font-size: 16px;	
+  font-size: 16px;
   padding: 10px;
 }
 
@@ -93,10 +93,10 @@ body{
   display: block;
   margin: auto;
   right: 200px;
-  bottom: 10px;	
+  bottom: 10px;
 }
 
-.checkDialog{  
+.checkDialog{
   margin: 0px auto;
   border-radius: 5px 5px 3px 3px;
   box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.8);
@@ -126,13 +126,7 @@ em{
   display: block;
   font-style: normal;
 }
-.btn.btn-primary{
-  width: 95%;
-  font-size: 20px;
-  box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  margin: 0px, 0px, 25px
-}
+
 .btn.disabled, .btn[disabled], fieldset[disabled] .btn{
   background: #ccc;
   border-color: #ccc;
@@ -162,7 +156,7 @@ em{
 }
 .alert-note{
   font-size: 14px;
-  color: #a00000;  
+  color: #a00000;
 }
 .alert-bold{
   color: #a00000;
@@ -200,7 +194,7 @@ p.form-control-static{
   padding-top: 3px !important
 }
 input:focus{
-  box-shadow: none !important 
+  box-shadow: none !important
 }
 footer{
   padding: 40px 0 10px;
