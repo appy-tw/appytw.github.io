@@ -180,6 +180,10 @@ $scope.showPrivacy = false;
 $scope.privacyPage = "doc/Privacy_Statement/privacy.html";
 $scope.privacyButtonText = "關閉";
 
+//
+$scope.printEmptyForm = false;
+//
+
 $scope.initPreview = function() {
  $scope.showLink = false;
  $scope.ibonButtonTip = ibonPreview;
@@ -195,7 +199,8 @@ $scope.modalHide = function() {
 $scope.preview = function() {
  $scope.initPreview();
   	//$scope.drawPDF();
-  	$scope.drawPreview();
+  	if (!$scope.printEmptyForm)
+  		$scope.drawPreview();
     $('#preview-modal').modal('show');
   };
 
