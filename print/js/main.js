@@ -401,6 +401,7 @@ function getID(id) {
   idArray[21]="M";  idArray[22]="N";  idArray[35]="O";  idArray[23]="P";
   idArray[24]="Q";  idArray[25]="R";  idArray[26]="S";  idArray[27]="T";
   idArray[28]="U";  idArray[29]="V";  idArray[30]="X";  idArray[31]="Y";
+  idArray[32]="W";  idArray[33]="Z";
   return idArray.indexOf(id.toUpperCase().substr(0,1))+id.substr(1,9);
 }
 
