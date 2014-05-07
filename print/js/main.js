@@ -1,4 +1,4 @@
-var appyApp = angular.module('appyApp', ['ngSanitize']);
+var appyApp = angular.module('appyApp', ['ngSanitize', 'mgo-angular-wizard']);
 
 appyApp.config(function($sceDelegateProvider) {
   $sceDelegateProvider.resourceUrlWhitelist([
@@ -23,7 +23,7 @@ appyApp.filter('district', function() {
   };
 })
 
-appyApp.controller('FormCtrl', function($scope, $http, $q, $window, $location) {
+appyApp.controller('FormCtrl', function($scope, $http, $q, $window, $location, WizardHandler) {
   var buttonTipSending = '資料傳送到 7-11 ibon 中...';
   var titleSending = '傳送到 7-11 ibon';
   var contentPreview = '請確認您的個人資料';
@@ -192,16 +192,13 @@ $scope.initPreview = function() {
  $scope.downloadButtonTip = downloadPreview;
 }
 
-$scope.modalHide = function() {
-  $('#preview-modal').modal('hide');
-};
 
 $scope.preview = function() {
  $scope.initPreview();
   	//$scope.drawPDF();
-  	if (!$scope.printEmptyForm)
-  		$scope.drawPreview();
-    $('#preview-modal').modal('show');
+  	if (!$scope.printEmptyForm) {
+      $scope.drawPreview();
+    }
   };
 
   $scope.proposers = [angular.copy(defaultData)];
