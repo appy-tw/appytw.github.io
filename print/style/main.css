@@ -59,6 +59,7 @@ body{
   padding: 0 0 30px;
   border-top: 8px solid #fa0;
   margin-top: 0px;
+  margin-bottom: 20px;
   -webkit-border-radius: 5px 5px 3px 3px;
   -moz-border-radius: 5px 5px 3px 3px;
   border-radius: 5px 5px 3px 3px;
@@ -258,4 +259,25 @@ footer a,footer a:hover{
     width: 100%;
     text-align: left
   }
+}
+
+.steps {
+  margin: 20px;
+}
+
+.step {
+  padding: 10px;
+}
+
+.wizard {
+  padding-bottom: 25px;
+}
+
+ul.steps-indicator {
+  margin-bottom: 20px;
+}
+
+.printing-place {
+  display: inline-block;
+  padding: 20px;
 }

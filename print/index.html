@@ -10,12 +10,16 @@
   <!-- Optional theme -->
   <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css">
   <link rel="stylesheet" href="style/main.css">
+  <link rel="stylesheet" href="bower_components/angular-wizard/dist/angular-wizard.min.css">
   <!-- Latest compiled and minified JavaScript -->
   <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
   <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular.min.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.1.5/angular-sanitize.js"></script>
   <script src="js/main.js"></script>
+  <script src="bower_components/angular-wizard/dist/angular-wizard.min.js"></script>
+  <script src="bower_components/lodash/dist/lodash.min.js"></script>
+
 </head>
 <body>
 <a id="top"></a>
@@ -36,200 +40,234 @@
   <a href ="#" ng-click="showProposal()"><img class="gogo-bottom" src="../assets/images/ma.png"></a>
 </div>
 
-<div id="proposalPage" >
-<div class="dec">
-  <img src="../assets/images/logo-b.png">
-</div>
-<form id="proposalForm" class="form-horizontal" role="form"
-  action="{{ pdfGeneratorUrl }}"
-  method="post" target="" name="proposalForm">
+<wizard class="wizard">
 
-  <h1 class="text-center">罷免提議/連署人名冊</h1>
-  <p class="text-center"> 罷免程序分為 提議階段 - 2% 提議人 以及 連署階段 - 13% 連署人 <br>系統將依目前階段自動生成文件 </p>
-  <em class="text-center" style=><b>以下欄位均為必填</b></em>
+<wz-step title="填寫">
+  <div id="proposalPage">
+  <div class="dec">
+    <img src="../assets/images/logo-b.png">
+  </div>
+  <form id="proposalForm" class="form-horizontal" role="form"
+    action="{{ pdfGeneratorUrl }}"
+    method="post" target="" name="proposalForm">
 
-  <div class="main-section section">
-    <div class="form-group" ng-class="{'has-error': proposalForm.EMAIL.$invalid}">
-      <label for="inputEmail" class="col-sm-2 control-label">電子信箱</label>
-      <div class="col-sm-10">
-        <input type="email" ng-model="email" name="EMAIL" class="form-control" id="inputEmail" placeholder="Email" required>
+    <h1 class="text-center">罷免提議/連署人名冊</h1>
+    <p class="text-center"> 罷免程序分為 提議階段 - 2% 提議人 以及 連署階段 - 13% 連署人 <br>系統將依目前階段自動生成文件 </p>
+    <em class="text-center" style=><b>以下欄位均為必填</b></em>
+
+    <div class="main-section section">
+      <div class="form-group" ng-class="{'has-error': proposalForm.EMAIL.$invalid}">
+        <label for="inputEmail" class="col-sm-2 control-label">電子信箱</label>
+        <div class="col-sm-10">
+          <input type="email" ng-model="email" name="EMAIL" class="form-control" id="inputEmail" placeholder="Email" required>
+        </div>
       </div>
-    </div>
-    <div class="form-group">
-          <label for="inputTarget" class="col-sm-2 col-xs-12 control-label">罷免對象</label>
-      <div class="col-sm-2 col-xs-8">
-        <p class="text-center form-control-static">{{selectedTarget.name}}</p>
-      </div>
-      <div class="col-sm-2 col-xs-4">
-        <button type="button" class="btn btn-default"
-          ng-click="showReason()">罷免理由書</button>
+      <div class="form-group">
+            <label for="inputTarget" class="col-sm-2 col-xs-12 control-label">罷免對象</label>
+        <div class="col-sm-2 col-xs-8">
+          <p class="text-center form-control-static">{{selectedTarget.name}}</p>
         </div>
         <div class="col-sm-2 col-xs-4">
-            <button type="button" class="btn btn-default"
-              ng-click="showEmptyForm()">空白提議書</button>
-        </div>
-
-        <div class="col-sm-4 col-xs-4">
           <button type="button" class="btn btn-default"
-            onclick="$('#legislator-modal').modal('show');" >選擇立委</button>
+            ng-click="showReason()">罷免理由書</button>
+          </div>
+          <div class="col-sm-2 col-xs-4">
+              <button type="button" class="btn btn-default"
+                ng-click="showEmptyForm()">空白提議書</button>
+          </div>
+
+          <div class="col-sm-4 col-xs-4">
+            <button type="button" class="btn btn-default"
+              onclick="$('#legislator-modal').modal('show');" >選擇立委</button>
+          </div>
+      </div>
+      <div class="form-group">
+        <label for="inputCount" class="col-sm-2 col-xs-12 control-label">填寫份數</label>
+        <div class="col-sm-2 col-xs-8">
+          <input type="number" readonly ng-model="count" class="form-control" id="inputCount">
+        </div>
+        <div class="btn-group col-sm-2 col-xs-4">
+          <button type="button" class="btn btn-default"
+            ng-click="count = count + 1">
+            <span class="glyphicon glyphicon-plus"></span>
+          </button>
+          <button type="button" class="btn btn-default"
+            ng-click="count = (count === 1 ? 1 : count - 1) ">
+            <span class="glyphicon glyphicon-minus"></span>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div ng-form="personForm" class="section" ng-repeat="person in proposers" ng-class-even="'even'">
+      <div class="form-group">
+        <div ng-class="{ 'has-error':  personForm.Name.$invalid }">
+          <label class="col-sm-2 control-label">姓名</label>
+          <div class="col-sm-3">
+            <input type="text" ng-model="person.name" class="form-control" name="Name" required placeholder="需與身分證相同">
+          </div>
+        </div>
+        <div ng-class="{ 'has-error': personForm.IDNo.$invalid }">
+          <label class="col-sm-2 control-label">身分證字號</label>
+          <div class="col-sm-5">
+            <input type="text" rocid ng-model="person.id" class="form-control" name="IDNo" maxlength="10" required placeholder="需與身分證相同 (半形英數字)">
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <div ng-class="{ 'has-error': personForm.Occupation.$invalid }">
+          <label for="Occupation_{{$index}}" class="col-sm-2 control-label">職業</label>
+          <div class="col-sm-3">
+            <input type="text" ng-model="person.occupation" class="form-control" name="Occupation" placeholder="請勿超過四個字" maxlength="4" required>
+          </div>
+        </div>
+        <div ng-class="{ 'has-error':
+           (personForm.BdayYear.$invalid || personForm.BdayMonth.$invalid || personForm.BdayDay.$invalid) }">
+          <label class="col-sm-2 control-label">生日</label>
+          <div class="col-sm-5 form-inline">
+            <select ng-model="person.birthdayYear" class="form-control" name="BdayYear"
+              ng-options="n.value as n.content for n in range(1895,1994)" required></select>
+            <select ng-model="person.birthdayMonth" class="form-control" name="BdayMonth"
+              ng-options="n.value as n.content for n in range(1,(person.birthdayYear==1994)?6:12)" required></select>
+            <select ng-model="person.birthdayDay" class="form-control" name="BdayDay"
+              ng-options="n.value as n.content for n in range(1,31)" required></select>
+          </div>
+        </div>
+        <div class="col-sm-12" align="right"><font class="alert alert-note"> *小提示: 要滿二十歲才有投票權喔! </font></div>
+      </div>
+
+      <div class="form-group" ng-class="{ 'has-error': personForm.RegAddVillage.$invalid }">
+        <label class="col-sm-2 control-label">戶籍地址</label>
+        <div addr-set class="col-sm-10 form-inline">
+          <select addr-array ng-model="person.addrCity" class="form-control" name="RegAddCity"
+            ng-change="person.addrVillage = null; person.addrDistrict = null"
+            ng-options="key for (key, value) in districts" required>
+            <option value="">縣市</option>
+          </select>
+          <select addr-array ng-model="person.addrDistrict" class="form-control" name="RegAddDistrict"
+            ng-change="person.addrVillage = null"
+            ng-options="key for (key, value) in person.addrCity.contains" required>
+            <option value="">區域/鄉鎮</options>
+          </select>
+          <select addr-array addr-validate ng-model="person.addrVillage" class="form-control" name="RegAddVillage"
+            ng-options="key for (key, value) in person.addrDistrict.contains" required>
+            <option value="">村里</options>
+          </select>
+          <a href="http://www.uisltsc.com.tw/myservant/" target="_blank" class="alert alert-addrerr" ng-show="personForm.RegAddVillage.$error.addrValidate"> 選區不符，點我查詢選區 </a>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="col-sm-3 col-sm-offset-2">
+          <div class="input-group" ng-class="{ 'has-error': personForm.RegAddNeighborhood.$invalid }">
+            <input type="number" class="form-control" ng-model="person.addrNeighborhood"
+              name="RegAddNeighborhood" required>
+            <span class="input-group-addon">鄰</span>
+          </div>
+        </div>
+        <div class="col-sm-7" ng-class="{ 'has-error': personForm.RegAddDetailAddress.$invalid }">
+          <input type="text" class="form-control" name="RegAddDetailAddress"
+            ng-model="person.addrDetail" required placeholder="請依身分證填入詳細地址，包含街道與門牌號碼">
+        </div>
+        <br> <p align="right" class="alert alert-note"> *小提示: 需設籍滿四個月才具有提議/連署資格 </p>
+      </div>
+
+      <input type="hidden" name="Name_{{$index}}" value="{{person.name}}">
+      <input type="hidden" name="IDNo_{{$index}}" value="{{person.id}}">
+      <input type="hidden" name="Occupation_{{$index}}" value="{{person.occupation}}">
+      <input type="hidden" name="RegAdd_{{$index}}"
+        value="{{person.addrCity.name}} {{person.addrDistrict.name}} {{person.addrVillage.name}} {{person.addrNeighborhood}}鄰 {{person.addrDetail}}">
+      <input type="hidden" name="addPrefix_{{$index}}" value="{{person.addrCity.name}} {{person.addrDistrict.name}} {{person.addrVillage.name}}">
+      <input type="hidden" name="Birthday_y_{{$index}}" value="{{person.birthdayYear}}">
+      <input type="hidden" name="Birthday_m_{{$index}}" value="{{person.birthdayMonth}}">
+      <input type="hidden" name="Birthday_d_{{$index}}" value="{{person.birthdayDay}}">
+      <input type="hidden" name="Sex_{{$index}}" value="">
+    </div>
+
+    <input type="hidden" name="Size" value="{{count}}">
+    <input type="hidden" name="Referral" value="">
+    <input type="hidden" name="Promise" value="0">
+    <input type="hidden" name="constituency"
+      value="{{selectedTarget.constituency[0]}},{{selectedTarget.constituency[1]}}">
+
+    <div class="form-group-privacy">
+        <div class="col-sm-9 control-label" ng-class="{ 'has-error': personForm.checkbox.$invalid }">
+          <label><input type="checkbox" class="alert alert-privacy" ng-model="person.privacy" ng-change="checkPrivacy()" required name="checkbox"> 我已閱讀並同意<a ng-click="checkPrivacy(true)" href="#">提議人個資法告知事項</a> </label>
         </div>
     </div>
-    <div class="form-group">
-      <label for="inputCount" class="col-sm-2 col-xs-12 control-label">填寫份數</label>
-      <div class="col-sm-2 col-xs-8">
-        <input type="number" readonly ng-model="count" class="form-control" id="inputCount">
+
+    <div class="text-center submit">
+      <div ng-class="{ hidden: !proposalForm.$invalid }" class="alert alert-danger">請確認上面標為紅色的欄位均正確填寫，並請確認隱私權聲明。</div>
+
+      <div class="form-group" ng-class="{ hidden: proposalForm.$invalid }">
+      <label class="col-sm-3 control-label">連絡電話(選填)</label>
+        <div class="col-sm-8">
+          <input name="Phone_0" class="form-control" placeholder="留下您的連絡方式, 方便我們在需要您連署時通知您">
+        </div>
       </div>
-      <div class="btn-group col-sm-2 col-xs-4">
-        <button type="button" class="btn btn-default"
-          ng-click="count = count + 1">
-          <span class="glyphicon glyphicon-plus"></span>
-        </button>
-        <button type="button" class="btn btn-default"
-          ng-click="count = (count === 1 ? 1 : count - 1) ">
-          <span class="glyphicon glyphicon-minus"></span>
-        </button>
-      </div>
+
+      <button type="button" class="btn btn-primary" wz-next
+      ng-disabled="proposalForm.$invalid && !printEmptyForm"
+        ng-click="preview(proposalForm)">
+        <span class="glyphicon glyphicon-print"></span> 預覽
+      </button>
     </div>
+  </form>
   </div>
-  <div ng-form="personForm" class="section" ng-repeat="person in proposers" ng-class-even="'even'">
-    <div class="form-group">
-      <div ng-class="{ 'has-error':  personForm.Name.$invalid }">
-        <label class="col-sm-2 control-label">姓名</label>
-        <div class="col-sm-3">
-          <input type="text" ng-model="person.name" class="form-control" name="Name" required placeholder="需與身分證相同">
-        </div>
+</wz-step>
+<wz-step title="預覽">
+  <div id="preview-page">
+    <h4 class="modal-title">{{modalTitle}}</h4>
+      <div class="text-center submit">
+      <span style="vertical-align">
+        <h1 class="alert alert-bold"> {{modalContent}} </h1>
+        <div class="checkDialog" ng-bind-html="finalCheckHtml"></div>
+      </span>
       </div>
-      <div ng-class="{ 'has-error': personForm.IDNo.$invalid }">
-        <label class="col-sm-2 control-label">身分證字號</label>
-        <div class="col-sm-5">
-          <input type="text" rocid ng-model="person.id" class="form-control" name="IDNo" maxlength="10" required placeholder="需與身分證相同 (半形英數字)">
-        </div>
-      </div>
-    </div>
-    <div class="form-group">
-      <div ng-class="{ 'has-error': personForm.Occupation.$invalid }">
-        <label for="Occupation_{{$index}}" class="col-sm-2 control-label">職業</label>
-        <div class="col-sm-3">
-          <input type="text" ng-model="person.occupation" class="form-control" name="Occupation" placeholder="請勿超過四個字" maxlength="4" required>
-        </div>
-      </div>
-      <div ng-class="{ 'has-error':
-         (personForm.BdayYear.$invalid || personForm.BdayMonth.$invalid || personForm.BdayDay.$invalid) }">
-        <label class="col-sm-2 control-label">生日</label>
-        <div class="col-sm-5 form-inline">
-          <select ng-model="person.birthdayYear" class="form-control" name="BdayYear"
-            ng-options="n.value as n.content for n in range(1895,1994)" required></select>
-          <select ng-model="person.birthdayMonth" class="form-control" name="BdayMonth"
-            ng-options="n.value as n.content for n in range(1,(person.birthdayYear==1994)?6:12)" required></select>
-          <select ng-model="person.birthdayDay" class="form-control" name="BdayDay"
-            ng-options="n.value as n.content for n in range(1,31)" required></select>
-        </div>
-      </div>
-      <div class="col-sm-12" align="right"><font class="alert alert-note"> *小提示: 要滿二十歲才有投票權喔! </font></div>
-    </div>
-
-    <div class="form-group" ng-class="{ 'has-error': personForm.RegAddVillage.$invalid }">
-      <label class="col-sm-2 control-label">戶籍地址</label>
-      <div addr-set class="col-sm-10 form-inline">
-        <select addr-array ng-model="person.addrCity" class="form-control" name="RegAddCity"
-          ng-change="person.addrVillage = null; person.addrDistrict = null"
-          ng-options="key for (key, value) in districts" required>
-          <option value="">縣市</option>
-        </select>
-        <select addr-array ng-model="person.addrDistrict" class="form-control" name="RegAddDistrict"
-          ng-change="person.addrVillage = null"
-          ng-options="key for (key, value) in person.addrCity.contains" required>
-          <option value="">區域/鄉鎮</options>
-        </select>
-        <select addr-array addr-validate ng-model="person.addrVillage" class="form-control" name="RegAddVillage"
-          ng-options="key for (key, value) in person.addrDistrict.contains" required>
-          <option value="">村里</options>
-        </select>
-        <a href="http://www.uisltsc.com.tw/myservant/" target="_blank" class="alert alert-addrerr" ng-show="personForm.RegAddVillage.$error.addrValidate"> 選區不符，點我查詢選區 </a>
-      </div>
-    </div>
-    <div class="form-group">
-      <div class="col-sm-3 col-sm-offset-2">
-        <div class="input-group" ng-class="{ 'has-error': personForm.RegAddNeighborhood.$invalid }">
-          <input type="number" class="form-control" ng-model="person.addrNeighborhood"
-            name="RegAddNeighborhood" required>
-          <span class="input-group-addon">鄰</span>
-        </div>
-      </div>
-      <div class="col-sm-7" ng-class="{ 'has-error': personForm.RegAddDetailAddress.$invalid }">
-        <input type="text" class="form-control" name="RegAddDetailAddress"
-          ng-model="person.addrDetail" required placeholder="請依身分證填入詳細地址，包含街道與門牌號碼">
-      </div>
-      <br> <p align="right" class="alert alert-note"> *小提示: 需設籍滿四個月才具有提議/連署資格 </p>
-    </div>
-
-    <input type="hidden" name="Name_{{$index}}" value="{{person.name}}">
-    <input type="hidden" name="IDNo_{{$index}}" value="{{person.id}}">
-    <input type="hidden" name="Occupation_{{$index}}" value="{{person.occupation}}">
-    <input type="hidden" name="RegAdd_{{$index}}"
-      value="{{person.addrCity.name}} {{person.addrDistrict.name}} {{person.addrVillage.name}} {{person.addrNeighborhood}}鄰 {{person.addrDetail}}">
-    <input type="hidden" name="addPrefix_{{$index}}" value="{{person.addrCity.name}} {{person.addrDistrict.name}} {{person.addrVillage.name}}">
-    <input type="hidden" name="Birthday_y_{{$index}}" value="{{person.birthdayYear}}">
-    <input type="hidden" name="Birthday_m_{{$index}}" value="{{person.birthdayMonth}}">
-    <input type="hidden" name="Birthday_d_{{$index}}" value="{{person.birthdayDay}}">
-    <input type="hidden" name="Sex_{{$index}}" value="">
-  </div>
-
-  <input type="hidden" name="Size" value="{{count}}">
-  <input type="hidden" name="Referral" value="">
-  <input type="hidden" name="Promise" value="0">
-  <input type="hidden" name="constituency"
-    value="{{selectedTarget.constituency[0]}},{{selectedTarget.constituency[1]}}">
-
-  <div class="form-group-privacy">
-      <div class="col-sm-9 control-label" ng-class="{ 'has-error': personForm.checkbox.$invalid }">
-        <label><input type="checkbox" class="alert alert-privacy" ng-model="person.privacy" ng-change="checkPrivacy()" required name="checkbox"> 我已閱讀並同意<a ng-click="checkPrivacy(true)" href="#">提議人個資法告知事項</a> </label>
-      </div>
-  </div>
-
-  <div class="text-center submit">
-    <div ng-class="{ hidden: !proposalForm.$invalid }" class="alert alert-danger">請確認上面標為紅色的欄位均正確填寫，並請確認隱私權聲明。</div>
-
-    <div class="form-group" ng-class="{ hidden: proposalForm.$invalid }">
-    <label class="col-sm-3 control-label">連絡電話(選填)</label>
-      <div class="col-sm-8">
-        <input name="Phone_0" class="form-control" placeholder="留下您的連絡方式, 方便我們在需要您連署時通知您">
-      </div>
-    </div>
-
-    <!--div class="form-group" ng-class="{ hidden: proposalForm.$invalid }">
-      <label for="inputEmail" class="col-sm-2 control-label">推薦人信箱</label>
-      <div class="col-sm-10">
-        <input name="Referral" class="form-control" placeholder="請輸入推薦人的電子郵件信箱, 幫助他進入英雄榜!">
-      </div>
-      <p align="right" class="alert alert-note"> *幫忙找到更多認同我們的朋友, 記得請他在推薦人填上你的電子信箱
-      </p>
-      <label for="inputCount" class="col-sm-2 col-xs-12 control-label">我要認領</label>
-      <div class="col-sm-2 col-xs-8">
-        <input type="number" readonly ng-model="count2" class="form-control" id="inputCount">
-      </div>
-      <div class="btn-group col-sm-2 col-xs-4">
-        <button type="button" class="btn btn-default"
-          ng-click="count2 = count2 + 1">
-          <span class="glyphicon glyphicon-plus"></span>
-        </button>
-        <button type="button" class="btn btn-default"
-          ng-click="count2 = (count2 === 1 ? 1 : count2 - 1) ">
-          <span class="glyphicon glyphicon-minus"></span>
+      <div class="preview-footer text-center">
+        <button type="button" class="btn btn-primary ng-binding" ng-click="downloadFile(proposalForm)" ng-disabled="!hasFormData()" wz-next>
+           <span class="glyphicon glyphicon-download-alt"></span> 確認完畢，下載提議書，並且前往下一步
         </button>
       </div>
-      <br>
-    </div-->
-
-
-    <button type="button" class="btn btn-primary"
-    ng-disabled="proposalForm.$invalid && !printEmptyForm"
-      ng-click="preview(proposalForm)">
-      <span class="glyphicon glyphicon-print"></span> 預覽
-    </button>
   </div>
-</form>
+</wz-step>
+<wz-step title="列印">
+  <div class="text-center">
+    <p>如果您有印表機，請依照以下步驟，下載提議書、開啟檔案，並且於您的 PDF 軟體中使用列印功能</p>
+    <p><a href="images/print-steps-full.png" target="_blank"><img src="images/print-steps.png" alt="列印步驟" width="650px"></a><br>(點選圖片可看大圖)</p>
+    <hr>
+    <p>若您沒有印表機，也可以下載提議書後，前往 7-11 或全家便利商店列印</p>
+    <div class="printing-place text-center">
+      <a target="_blank" href="http://www.ibon.com.tw/0100/file_upload.aspx">
+        <img src="images/7-ELEVEn.jpg" alt="7-11 logo" /><br />
+        前往 7-11 ibon 列印
+      </a>
+    </div>
+    <div class="printing-place text-center">
+      <a target="_blank" href="http://www.famiport.com.tw/service.asp?page=3&amp;c1=A08">
+        <img src="images/FamilyMart.jpg" alt="全家 logo" /><br />
+        前往全家 FamiPort 列印
+      </a>
+    </div>
+    <div><a class="btn btn-primary" href="" wz-next>下一步：印出後簽名</a></div>
+    <div><strong>註</strong>：以上圖像及文字商標均屬於該公司所有</div>
+  </div>
+</wz-step>
+<wz-step title="簽名/寄回">
+  <div class="text-center">
+    <p><img src="images/stamp-send.png"></p>
+    <p>貼上郵票後直接投遞提議書</p>
+    <a href="" class="btn btn-primary" wz-next>下一步</a>
+  </div>
+</wz-step>
+<wz-step title="完成">
+<div class="text-center">
+  <h1 style="color: red;">完成</h1>
+  <p>謝謝您參與割闌尾活動一起監督立委，也歡迎逛逛<a href="https://twly.herokuapp.com/" target="_blank">立委投票指南</a>或是<a href="http://appy.tw/news/">看看最新資訊</a>！</p>
 </div>
+
+</wz-step>
+</wizard>
+
+
 
 <div id="privacy-modal" class="modal fade">
   <div class="modal-dialog modal-lg">
@@ -245,43 +283,7 @@
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 
-<div id="preview-modal" class="modal fade">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h4 class="modal-title">{{modalTitle}}</h4>
-      </div>
-      <div class="modal-body">
-        <div class="text-center submit">
-        <span style="vertical-align">
-          <h1 class="alert alert-bold"> {{modalContent}} </h1>
-          <div class="checkDialog" ng-bind-html="finalCheckHtml"></div>
-        </span>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-primary ng-binding" ng-click="downloadFile(proposalForm)" ng-disabled="!hasFormData()">
-           <span class="glyphicon glyphicon-download-alt"></span> 確認完畢，下載提議書
-        </button>
-        <div class="btn-group">
-          <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
-            沒有列表機？雲端列印！ <span class="caret"></span>
-          </button>
-          <ul class="dropdown-menu" role="menu">
-            <li><a target="_blank" href="http://www.ibon.com.tw/0100/file_upload.aspx">
-              前往 7-11 ibon 列印 <span class="glyphicon glyphicon-print"></span>
-            </a></li>
-            <li><a target="_blank" href="http://www.famiport.com.tw/service.asp?page=3&amp;c1=A08">
-              前往全家 FamiPort 列印 <span class="glyphicon glyphicon-print"></span>
-            </a></li>
-          </ul>
-        </div>
-        <button type="button" class="btn btn-default" ng-click="modalHide()">關閉</button>
-      </div>
-    </div><!-- /.modal-content -->
-  </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
+
 
 <div id="legislator-modal" class="modal fade">
   <div class="modal-dialog modal-lg">
