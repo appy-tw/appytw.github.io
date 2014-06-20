@@ -76,8 +76,8 @@ appyApp.controller('FormCtrl', function($scope, $http, $q, $window, $location, W
   };
 
   $scope.filterLegislator = function(ALL_mly) {
-  	var result = [];
-  	var supported = ["蔡正元", "吳育昇", "林鴻池"];
+    var result = [];
+    var supported = ["蔡正元", "吳育昇", "林鴻池", "廖正井"];
     angular.forEach(ALL_mly, function(ly) {
       if (supported.indexOf(ly.name) > -1) {
         result.push(ly);
