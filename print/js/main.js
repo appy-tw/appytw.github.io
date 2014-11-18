@@ -41,6 +41,8 @@ appyApp.controller('FormCtrl', function($scope, $http, $q, $window, $location, W
     transformRequest: function(data) { return data; }
   };
 
+  $window.location.href = 'http://1129vday.tw/#/petition';
+
   $q.all([mly, constituency, districts, district_info]).then(function(results) {
     $scope.mly = $scope.filterLegislator(results[0].data);
     $scope.constituency = results[1].data;
