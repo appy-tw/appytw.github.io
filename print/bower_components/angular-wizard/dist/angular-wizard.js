@@ -6,13 +6,13 @@
  */
 angular.module('templates-angularwizard', ['step.html', 'wizard.html']);
 
-angular.module("step.html", []).run(["$templateCache", function($templateCache) {
+angular.module("step.html", []).run(["$templateCache", $templateCache => {
   $templateCache.put("step.html",
     "<section ng-show=\"selected\" ng-class=\"{current: selected, done: completed}\" class=\"step\" ng-transclude>\n" +
     "</section>");
 }]);
 
-angular.module("wizard.html", []).run(["$templateCache", function($templateCache) {
+angular.module("wizard.html", []).run(["$templateCache", $templateCache => {
   $templateCache.put("wizard.html",
     "<div>\n" +
     "    <div class=\"steps\" ng-transclude></div>\n" +
@@ -27,152 +27,154 @@ angular.module("wizard.html", []).run(["$templateCache", function($templateCache
 
 angular.module('mgo-angular-wizard', ['templates-angularwizard']);
 
-angular.module('mgo-angular-wizard').directive('wzStep', function() {
-    return {
-        restrict: 'EA',
-        replace: true,
-        transclude: true,
-        scope: {
-            wzTitle: '@',
-            title: '@'
-        },
-        require: '^wizard',
-        templateUrl: function(element, attributes) {
-          return attributes.template || "step.html";
-        },
-        link: function($scope, $element, $attrs, wizard) {
-            $scope.title = $scope.title || $scope.wzTitle;
-            wizard.addStep($scope);
-        }
+angular.module('mgo-angular-wizard').directive('wzStep', () => ({
+    restrict: 'EA',
+    replace: true,
+    transclude: true,
+
+    scope: {
+        wzTitle: '@',
+        title: '@'
+    },
+
+    require: '^wizard',
+
+    templateUrl(element, attributes) {
+      return attributes.template || "step.html";
+    },
+
+    link($scope, $element, $attrs, wizard) {
+        $scope.title = $scope.title || $scope.wzTitle;
+        wizard.addStep($scope);
     }
-});
+}));
 
-angular.module('mgo-angular-wizard').directive('wizard', function() {
-    return {
-        restrict: 'EA',
-        replace: true,
-        transclude: true,
-        scope: {
-            currentStep: '=',
-            onFinish: '&',
-            hideIndicators: '=',
-            editMode: '=',
-            name: '@'
-        },
-        templateUrl: function(element, attributes) {
-          return attributes.template || "wizard.html";
-        },
-        controller: ['$scope', '$element', 'WizardHandler', function($scope, $element, WizardHandler) {
+angular.module('mgo-angular-wizard').directive('wizard', () => ({
+    restrict: 'EA',
+    replace: true,
+    transclude: true,
 
-            WizardHandler.addWizard($scope.name || WizardHandler.defaultName, this);
-            $scope.$on('$destroy', function() {
-                WizardHandler.removeWizard($scope.name || WizardHandler.defaultName);
-            });
+    scope: {
+        currentStep: '=',
+        onFinish: '&',
+        hideIndicators: '=',
+        editMode: '=',
+        name: '@'
+    },
 
-            $scope.steps = [];
+    templateUrl(element, attributes) {
+      return attributes.template || "wizard.html";
+    },
 
-            $scope.$watch('currentStep', function(step) {
-                if (!step) return;
-                var stepTitle = $scope.selectedStep.title || $scope.selectedStep.wzTitle;
-                if ($scope.selectedStep && stepTitle !== $scope.currentStep) {
-                    $scope.goTo(_.findWhere($scope.steps, {title: $scope.currentStep}));
-                }
+    controller: ['$scope', '$element', 'WizardHandler', function($scope, $element, WizardHandler) {
 
-            });
+        WizardHandler.addWizard($scope.name || WizardHandler.defaultName, this);
+        $scope.$on('$destroy', () => {
+            WizardHandler.removeWizard($scope.name || WizardHandler.defaultName);
+        });
 
-            $scope.$watch('[editMode, steps.length]', function() {
-                var editMode = $scope.editMode;
-                if (_.isUndefined(editMode) || _.isNull(editMode)) return;
+        $scope.steps = [];
 
-                if (editMode) {
-                    _.each($scope.steps, function(step) {
-                        step.completed = true;
-                    });
-                }
-            }, true);
-
-            this.addStep = function(step) {
-                $scope.steps.push(step);
-                if ($scope.steps.length === 1) {
-                    $scope.goTo($scope.steps[0]);
-                }
-            };
-
-            $scope.goTo = function(step) {
-                unselectAll();
-                $scope.selectedStep = step;
-                if (!_.isUndefined($scope.currentStep)) {
-                    $scope.currentStep = step.title || step.wzTitle;
-                }
-                step.selected = true;
-            };
-
-            function unselectAll() {
-                _.each($scope.steps, function (step) {
-                    step.selected = false;
-                });
-                $scope.selectedStep = null;
+        $scope.$watch('currentStep', step => {
+            if (!step) return;
+            var stepTitle = $scope.selectedStep.title || $scope.selectedStep.wzTitle;
+            if ($scope.selectedStep && stepTitle !== $scope.currentStep) {
+                $scope.goTo(_.findWhere($scope.steps, {title: $scope.currentStep}));
             }
 
-            this.next = function(draft) {
-                var index = _.indexOf($scope.steps , $scope.selectedStep);
-                if (!draft) {
-                    $scope.selectedStep.completed = true;
-                }
-                if (index === $scope.steps.length - 1) {
-                    this.finish();
-                } else {
-                    $scope.goTo($scope.steps[index + 1]);
-                }
-            };
+        });
 
-            this.goTo = function(step) {
-                var stepTo;
-                if (_.isNumber(step)) {
-                    stepTo = $scope.steps[step];
-                } else {
-                    stepTo = _.findWhere($scope.steps, {title: step});
-                }
-                $scope.goTo(stepTo);
-            };
+        $scope.$watch('[editMode, steps.length]', () => {
+            var editMode = $scope.editMode;
+            if (_.isUndefined(editMode) || _.isNull(editMode)) return;
 
-            this.finish = function() {
-                if ($scope.onFinish) {
-                    $scope.onFinish();
-                }
-            };
+            if (editMode) {
+                _.each($scope.steps, step => {
+                    step.completed = true;
+                });
+            }
+        }, true);
 
-            this.cancel = this.previous = function() {
-                var index = _.indexOf($scope.steps , $scope.selectedStep);
-                if (index === 0) {
-                    throw new Error("Can't go back. It's already in step 0");
-                } else {
-                    $scope.goTo($scope.steps[index - 1]);
-                }
-            };
-        }]
-    };
-});
+        this.addStep = step => {
+            $scope.steps.push(step);
+            if ($scope.steps.length === 1) {
+                $scope.goTo($scope.steps[0]);
+            }
+        };
+
+        $scope.goTo = step => {
+            unselectAll();
+            $scope.selectedStep = step;
+            if (!_.isUndefined($scope.currentStep)) {
+                $scope.currentStep = step.title || step.wzTitle;
+            }
+            step.selected = true;
+        };
+
+        function unselectAll() {
+            _.each($scope.steps, step => {
+                step.selected = false;
+            });
+            $scope.selectedStep = null;
+        }
+
+        this.next = function(draft) {
+            var index = _.indexOf($scope.steps , $scope.selectedStep);
+            if (!draft) {
+                $scope.selectedStep.completed = true;
+            }
+            if (index === $scope.steps.length - 1) {
+                this.finish();
+            } else {
+                $scope.goTo($scope.steps[index + 1]);
+            }
+        };
+
+        this.goTo = step => {
+            var stepTo;
+            if (_.isNumber(step)) {
+                stepTo = $scope.steps[step];
+            } else {
+                stepTo = _.findWhere($scope.steps, {title: step});
+            }
+            $scope.goTo(stepTo);
+        };
+
+        this.finish = () => {
+            if ($scope.onFinish) {
+                $scope.onFinish();
+            }
+        };
+
+        this.cancel = this.previous = () => {
+            var index = _.indexOf($scope.steps , $scope.selectedStep);
+            if (index === 0) {
+                throw new Error("Can't go back. It's already in step 0");
+            } else {
+                $scope.goTo($scope.steps[index - 1]);
+            }
+        };
+    }]
+}));
 
 function wizardButtonDirective(action) {
     angular.module('mgo-angular-wizard')
-        .directive(action, function() {
-            return {
-                restrict: 'A',
-                replace: false,
-                require: '^wizard',
-                link: function($scope, $element, $attrs, wizard) {
+        .directive(action, () => ({
+        restrict: 'A',
+        replace: false,
+        require: '^wizard',
 
-                    $element.on("click", function(e) {
-                        e.preventDefault();
-                        $scope.$apply(function() {
-                            $scope.$eval($attrs[action]);
-                            wizard[action.replace("wz", "").toLowerCase()]();
-                        });
-                    });
-                }
-            };
-        });
+        link($scope, $element, $attrs, wizard) {
+
+            $element.on("click", e => {
+                e.preventDefault();
+                $scope.$apply(() => {
+                    $scope.$eval($attrs[action]);
+                    wizard[action.replace("wz", "").toLowerCase()]();
+                });
+            });
+        }
+    }));
 }
 
 wizardButtonDirective('wzNext');
@@ -180,22 +182,22 @@ wizardButtonDirective('wzPrevious');
 wizardButtonDirective('wzFinish');
 wizardButtonDirective('wzCancel');
 
-angular.module('mgo-angular-wizard').factory('WizardHandler', function() {
+angular.module('mgo-angular-wizard').factory('WizardHandler', () => {
    var service = {};
    
    var wizards = {};
    
    service.defaultName = "defaultWizard";
    
-   service.addWizard = function(name, wizard) {
+   service.addWizard = (name, wizard) => {
        wizards[name] = wizard;
    };
    
-   service.removeWizard = function(name) {
+   service.removeWizard = name => {
        delete wizards[name];
    };
    
-   service.wizard = function(name) {
+   service.wizard = name => {
        var nameToUse = name;
        if (!name) {
            nameToUse = service.defaultName;

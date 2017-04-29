@@ -1,6 +1,6 @@
   'use strict';
 
-module.exports = function(grunt) {
+module.exports = grunt => {
 
   // Project configuration.
   grunt.initConfig({
@@ -155,12 +155,12 @@ module.exports = function(grunt) {
   grunt.registerTask('travis', ['build']);
 
   // Provides the "bump" task.
-  grunt.registerTask('bump', 'Increment version number', function() {
+  grunt.registerTask('bump', 'Increment version number', () => {
     var versionType = grunt.option('type');
     function bumpVersion(version, versionType) {
-      var type = {patch: 2, minor: 1, major: 0},
-          parts = version.split('.'),
-          idx = type[versionType || 'patch'];
+      var type = {patch: 2, minor: 1, major: 0};
+      var parts = version.split('.');
+      var idx = type[versionType || 'patch'];
       parts[idx] = parseInt(parts[idx], 10) + 1;
       while(++idx < parts.length) { parts[idx] = 0; }
       return parts.join('.');
