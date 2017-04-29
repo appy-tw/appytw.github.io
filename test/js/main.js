@@ -1,6 +1,6 @@
 var appyApp = angular.module('appyApp', ['ngSanitize']);
 
-appyApp.config(function($sceDelegateProvider) {
+appyApp.config($sceDelegateProvider => {
   $sceDelegateProvider.resourceUrlWhitelist([
     'self',
     'http://www.uisltsc.com.tw/**',
@@ -9,21 +9,15 @@ appyApp.config(function($sceDelegateProvider) {
   ]);
 });
 
-appyApp.filter('district', function() {
-  return function(legislators, districts) {
-    if (!districts) {
-      return legislators;
-    }
+appyApp.filter('district', () => (legislators, districts) => {
+  if (!districts) {
+    return legislators;
+  }
 
-    return legislators.filter(function(ly) {
-      return districts.some(function(d) {
-        return d === ly.constituency[0]+','+ly.constituency[1];
-      })
-    });
-  };
+  return legislators.filter(ly => districts.some(d => d === ly.constituency[0]+','+ly.constituency[1]));
 })
 
-appyApp.controller('FormCtrl', function($scope, $http, $q, $window, $location) {
+appyApp.controller('FormCtrl', ($scope, $http, $q, $window, $location) => {
   var buttonTipSending = '資料傳送到 7-11 ibon 中...';
   var titleSending = '傳送到 7-11 ibon';
   var contentPreview = '請確認您的個人資料';
@@ -38,10 +32,10 @@ appyApp.controller('FormCtrl', function($scope, $http, $q, $window, $location) {
   var district_info = $http.get('data/district-data.json');
   var options = {
     headers: { 'Content-Type': undefined },
-    transformRequest: function(data) { return data; }
+    transformRequest(data) { return data; }
   };
 
-  $q.all([mly, constituency, districts, district_info]).then(function(results) {
+  $q.all([mly, constituency, districts, district_info]).then(results => {
     $scope.mly = $scope.filterLegislator(results[0].data);
     $scope.constituency = results[1].data;
     $scope.districts = results[2].data;
@@ -75,10 +69,10 @@ appyApp.controller('FormCtrl', function($scope, $http, $q, $window, $location) {
     birthdayDay: null
   };
 
-  $scope.filterLegislator = function(ALL_mly) {
+  $scope.filterLegislator = ALL_mly => {
   	var result = [];
   	var supported = ["蔡正元", "吳育昇", "林鴻池"];
-    angular.forEach(ALL_mly, function(ly) {      
+    angular.forEach(ALL_mly, ly => {      
       if (supported.indexOf(ly.name) > -1) { 
         result.push(ly);
       }
@@ -92,15 +86,16 @@ appyApp.controller('FormCtrl', function($scope, $http, $q, $window, $location) {
 	return result;*/
   };
 
-  $scope.setLegislator = function(name) {
-    angular.forEach($scope.mly, function(ly) {
-      var constituency, cityname;
+  $scope.setLegislator = name => {
+    angular.forEach($scope.mly, ly => {
+      var constituency;
+      var cityname;
       if (ly.name === name) {
 
         $scope.selectedTarget = ly;
         constituency = ly.constituency.join(',');
         cityname = $scope.constituency[constituency][0].split(',')[0];
-        angular.forEach($scope.proposers, function(person) {
+        angular.forEach($scope.proposers, person => {
           person.addrCity = $scope.districts[cityname];
           person.addrDistrict = null;
           person.addrVillage = null;
@@ -109,12 +104,12 @@ appyApp.controller('FormCtrl', function($scope, $http, $q, $window, $location) {
         var cons = $scope.selectedTarget.constituency[0] + $scope.selectedTarget.constituency[1];
         
         var reasonPage = "doc/" + cons + "/reason.html";
-    	$http.get(reasonPage).then(function(response) {
+    	$http.get(reasonPage).then(response => {
     		$scope.myHTML = response.data;
 		});
 		$scope.emptyForm = "doc/" + cons + "/proposal_" + cons + ".pdf";  
 				
-		angular.forEach($scope.district_info, function(info) {
+		angular.forEach($scope.district_info, info => {
 			if (info.district_legislator == name) {
 				$scope.selectTargetInfo = info;
 			}
@@ -124,15 +119,13 @@ appyApp.controller('FormCtrl', function($scope, $http, $q, $window, $location) {
     $('#legislator-modal').modal('hide');      
   };
 
-  $scope.hasFormData = function() {
-    return window.FormData !== undefined ? true : false;
-  };
+  $scope.hasFormData = () => window.FormData !== undefined ? true : false;
 
   if (!$scope.hasFormData()) {
     $('#browser-modal').modal('show');
   }
 
-  $scope.sendToIbon = function(data) {
+  $scope.sendToIbon = data => {
     var url = 'http://www.ibon.com.tw/0100/file_upload.aspx';
     var uploadData = new FormData();
     var fileBlob = new Blob([data], { type: 'application/pdf'});
@@ -146,26 +139,26 @@ appyApp.controller('FormCtrl', function($scope, $http, $q, $window, $location) {
     uploadData.append('ctl00$cphContent$btnUpload', 'OK');
 
     var second = $http.post(url, uploadData, options);
-    second.error(function(data, status, headers, config) {
+    second.error((data, status, headers, config) => {
       $scope.ibonButtonTip = '傳送完成！請到你的信箱獲得 ibon 下載編號';
       $scope.showLink = true;
     });
   };
 
-  $scope.downloadFile = function() {
+  $scope.downloadFile = () => {
   	$scope.downloadButtonTip = downloadDownloading;
   	document.getElementById('proposalForm').submit();
   }
 
-  $scope.sendTo711 = function() {
+  $scope.sendTo711 = () => {
     $scope.modalTitle = titleSending;
     $scope.ibonButtonTip = buttonTipSending;        
 
     var form = new FormData(document.getElementById('proposalForm'));
-    $http.post($scope.pdfGeneratorUrl, form, options).success(function(data) {
+    $http.post($scope.pdfGeneratorUrl, form, options).success(data => {
       $scope.sendToIbon(data);
     })
-    .error(function(data) {
+    .error(data => {
       $scope.sendToIbon(data);
     });
   };
@@ -180,7 +173,7 @@ appyApp.controller('FormCtrl', function($scope, $http, $q, $window, $location) {
   $scope.privacyPage = "doc/Privacy_Statement/privacy.html";
   $scope.privacyButtonText = "關閉";
   
-  $scope.initPreview = function() {
+  $scope.initPreview = () => {
   	$scope.showLink = false;
   	$scope.ibonButtonTip = ibonPreview;
   	$scope.modalTitle = titlePreview;
@@ -188,11 +181,11 @@ appyApp.controller('FormCtrl', function($scope, $http, $q, $window, $location) {
   	$scope.downloadButtonTip = downloadPreview;
   }
   
-  $scope.modalHide = function() {
+  $scope.modalHide = () => {
     $('#preview-modal').modal('hide');
   };
   
-  $scope.preview = function() {
+  $scope.preview = () => {
   	$scope.initPreview();
   	//$scope.drawPDF();
   	$scope.drawPreview();
@@ -201,7 +194,7 @@ appyApp.controller('FormCtrl', function($scope, $http, $q, $window, $location) {
 
   $scope.proposers = [angular.copy(defaultData)];
 
-  $scope.range = function(start, end) {
+  $scope.range = (start, end) => {
     var result = [];
     for (var i = start; i <= end; i++) {
       result.push({value: i, content: i});
@@ -209,7 +202,7 @@ appyApp.controller('FormCtrl', function($scope, $http, $q, $window, $location) {
     return result;
   };
 
-  $scope.checkPrivacy = function(forceShow) {
+  $scope.checkPrivacy = forceShow => {
   	if (($scope.showPrivacy === true) && (forceShow != true))
   		return;
   	
@@ -223,41 +216,37 @@ appyApp.controller('FormCtrl', function($scope, $http, $q, $window, $location) {
 	$('#privacy-modal').modal('show');
   }
   
-  $scope.showProposal = function() {
+  $scope.showProposal = () => {
   	document.getElementById("proposalPage").style.display="block";
   	document.getElementById("reasonPage").style.display="none";
   	$scope.gotoTop();
   }
   
-  $scope.showReason = function() {
+  $scope.showReason = () => {
   	document.getElementById("proposalPage").style.display="none";
   	document.getElementById("reasonPage").style.display="block";
   	$scope.gotoTop();
   }
-  $scope.showEmptyForm = function() {
+  $scope.showEmptyForm = () => {
   	window.open($scope.emptyForm);
   }
   
-  $scope.gotoTop = function (){
+  $scope.gotoTop = () => {
     $window.scrollTo(0, 0);
   };
 
-  $scope.initLegislatorFilter = function() {
-    $scope.$watch('selectedCity', function(newValue, oldValue) {
+  $scope.initLegislatorFilter = () => {
+    $scope.$watch('selectedCity', (newValue, oldValue) => {
       if (!newValue) {
         $scope.filteredDistricts = Object.keys($scope.constituency);
         return;
       }
 
-      $scope.filteredDistricts = Object.keys($scope.constituency).filter(function(c) {
-        return $scope.constituency[c].some(function(dist) {
-          return (dist.indexOf(newValue.name) !== -1);
-        });
-      });
+      $scope.filteredDistricts = Object.keys($scope.constituency).filter(c => $scope.constituency[c].some(dist => dist.indexOf(newValue.name) !== -1));
     });
   };
 
-  $scope.$watch('count', function(newValue, oldValue) {
+  $scope.$watch('count', (newValue, oldValue) => {
     var i = 0;
     var offset = parseInt(newValue, 10) - parseInt(oldValue, 10);
     if (offset === NaN) {
@@ -275,7 +264,7 @@ appyApp.controller('FormCtrl', function($scope, $http, $q, $window, $location) {
     }
   });
     
-    $scope.fillInData = function(column, data, idx) {   
+    $scope.fillInData = (column, data, idx) => {   
     	var pData = $scope.proposers[idx];
     	
     	column.length = 0;
@@ -311,7 +300,7 @@ appyApp.controller('FormCtrl', function($scope, $http, $q, $window, $location) {
     	        + pData.addrDetail);
 	}
     
-    $scope.drawPreview = function() {
+    $scope.drawPreview = () => {
     	var users = $scope.proposers.length;
     	var column = [];
     	var data = [];    
@@ -366,7 +355,7 @@ appyApp.controller('FormCtrl', function($scope, $http, $q, $window, $location) {
 		} 
 	}
     
-	$scope.drawPDF = function() {
+	$scope.drawPDF = () => {
 		var canvas = document.getElementById("cnvs");
             //set the height and width of canvas
             var cw = 10;
@@ -429,24 +418,23 @@ function idCheck(id) {
     return false;    
 }
 
-appyApp.directive('rocid', function($http) {
-  return {
-      require: 'ngModel',
-      link: function(scope, elm, attrs, ctrl) {
-        ctrl.$parsers.unshift(function(viewValue) {
-          if (idCheck(viewValue)) {
-            // it is valid
-            ctrl.$setValidity('rocid', true);
-            return viewValue;
-          } else {
-            // it is invalid, return undefined (no model update)
-            ctrl.$setValidity('rocid', false);
-            return undefined;
-          }
-        });
+appyApp.directive('rocid', $http => ({
+  require: 'ngModel',
+
+  link(scope, elm, attrs, ctrl) {
+    ctrl.$parsers.unshift(viewValue => {
+      if (idCheck(viewValue)) {
+        // it is valid
+        ctrl.$setValidity('rocid', true);
+        return viewValue;
+      } else {
+        // it is invalid, return undefined (no model update)
+        ctrl.$setValidity('rocid', false);
+        return undefined;
       }
-    };
-});
+    });
+  }
+}));
 
 function AddressCtrl($scope) {
     this.models = [];    
@@ -456,68 +444,66 @@ AddressCtrl.prototype.registerModel = function(model) {
     this.models.push(model);
 };
 
-AddressCtrl.prototype.checkValidity = function(scope) {			
-	var ly = scope.selectedTarget;
-    var constituency = ly.constituency.join(',');
-    var cityList = scope.constituency[constituency];   
-    var size, cityname;
-    var models = this.models;
-    var ret = false;
-    	
-    return cityList.some(function(city) { 
-        cityname = city.split(',');
-    	size = cityname.length;
-    	
-    	if (size === 1){
-			if (models[0].$viewValue.name === cityname[0])
-				return true;
-		} else if (size === 2){			
-			if ((models[0].$viewValue.name === cityname[0])
-				&& (models[1].$viewValue.name === cityname[1])) {
-				return true;
-			}
-		} else if (size >= 3){
-			if ((models[0].$viewValue.name === cityname[0])
-				&& (models[1].$viewValue.name === cityname[1])
-				&& (models[2].$viewValue.name === cityname[2]))
-				return true;
-		}
-    });    
+AddressCtrl.prototype.checkValidity = function(scope) {
+  var ly = scope.selectedTarget;
+  var constituency = ly.constituency.join(',');
+  var cityList = scope.constituency[constituency];
+  var size;
+  var cityname;
+  var models = this.models;
+  var ret = false;
+
+  return cityList.some(city => { 
+      cityname = city.split(',');
+      size = cityname.length;
+      
+      if (size === 1){
+          if (models[0].$viewValue.name === cityname[0])
+              return true;
+      } else if (size === 2){			
+          if ((models[0].$viewValue.name === cityname[0])
+              && (models[1].$viewValue.name === cityname[1])) {
+              return true;
+          }
+      } else if (size >= 3){
+          if ((models[0].$viewValue.name === cityname[0])
+              && (models[1].$viewValue.name === cityname[1])
+              && (models[2].$viewValue.name === cityname[2]))
+              return true;
+      }
+  });
 };
 
-appyApp.directive("addrSet", function() {
-    return {    
-    	controller: 'AddressCtrl',
-        link: function(scope, elem, attr, ctrl) {
-        }
-    }
-});
+appyApp.directive("addrSet", () => ({
+  controller: 'AddressCtrl',
 
-appyApp.directive('addrArray', function() {
-    return {
-        require: ['^addrSet', 'ngModel'],
-        link: function(scope, elem, attr, ctrl) {
-        	var addrCtrl = ctrl[0];
-        	var addrSelect = ctrl[1];        	
-        	addrCtrl.registerModel(addrSelect);        	
-        }
-    }
-});
+  link(scope, elem, attr, ctrl) {
+  }
+}));
 
-appyApp.directive('addrValidate', function() {
-    return {
-        require: ['^addrSet', 'ngModel'],
-        scope:true,
-        link: function(scope, elem, attr, ctrl) {
-        	var addrCtrl = ctrl[0];
-        	var addrSelect = ctrl[1];
-        	
-            addrSelect.$parsers.push(function(viewValue) {
-                addrSelect.$setValidity("addrValidate", addrCtrl.checkValidity(scope));
-                return viewValue;
-            });
-        }
-    }
-});
+appyApp.directive('addrArray', () => ({
+  require: ['^addrSet', 'ngModel'],
+
+  link(scope, elem, attr, ctrl) {
+      var addrCtrl = ctrl[0];
+      var addrSelect = ctrl[1];        	
+      addrCtrl.registerModel(addrSelect);        	
+  }
+}));
+
+appyApp.directive('addrValidate', () => ({
+  require: ['^addrSet', 'ngModel'],
+  scope:true,
+
+  link(scope, elem, attr, ctrl) {
+      var addrCtrl = ctrl[0];
+      var addrSelect = ctrl[1];
+      
+      addrSelect.$parsers.push(viewValue => {
+          addrSelect.$setValidity("addrValidate", addrCtrl.checkValidity(scope));
+          return viewValue;
+      });
+  }
+}));
 
 
